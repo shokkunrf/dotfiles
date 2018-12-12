@@ -1,0 +1,18 @@
+clear lock
+remove mod1 = Alt_R
+
+! PrintScreen to Super_R
+keycode 107 = Super_R
+! Alt_L to Mode_switch
+keycode 108 = Mode_switch
+! CapsLock to Zenkaku_Hankaku
+keycode 66 = Zenkaku_Hankaku
+! hjkl  
+keycode 43 = h H Left NoSymbol
+keycode 44 = j J Down NoSymbol
+keycode 45 = k K Up NoSymbol
+keycode 46 = l L Right NoSymbol
+! Shift+PageUp to Menu
+keycode 112 = Prior NoSymbol Menu NoSymbol Prior 
+
+add mod4 = Super_R

@@ -1,0 +1,71 @@
+-- vim: ft=haskell
+Config { font = "xft:Migu 1M:size=9"
+       , bgColor = "#0c0c0c"
+       , fgColor = "#999999"
+       , position = Top
+       --, lowerOnStart = True
+       --, overrideRedirect = True
+       , commands = 
+           [ Run StdinReader
+           -- network activity monitor (dynamic interface resolution)
+           , Run DynNetwork
+	       [ "--template" , "<dev>(<rx>k⇩⇧<tx>k)"
+               , "--Low"      , "30"  -- units: kB/s
+               , "--High"     , "1000" -- units: kB/s
+               , "--low"      , "#CCCCCC"
+               , "--normal"   , "darkgreen"
+               , "--high"     , "darkorange"
+               ] 10
+           , Run MultiCpu
+	       [ "-t"       , "■(<total>%)"
+               , "--Low"    , "10"
+               , "--High"   , "50"
+               , "-m"       , "2"
+	       , "--low"    , "#cccccc"
+               , "--normal" , "orange"
+               , "--high"   , "red"
+               ] 10
+           , Run Memory
+	       [ "-t"       , "□(<usedratio>%)"
+               , "--Low"    , "50"
+               , "--High"   , "70"
+               , "-m"       , "2"
+	       , "--low"    , "#cccccc"
+               , "--normal" , "orange"
+               , "--high"   , "red"
+               ] 10
+           , Run Battery
+               [ "-t"       , "🔋(<left>%)"
+               , "--Low"    , "20"
+               , "--High"   , "50"
+               , "--low"    , "red"
+               , "--normal" , "orange"
+	       , "--high"   , "darkgreen"
+	       , "-m"       , "3"
+               -- , "--"
+	           -- AC "off" status
+                   -- , "-o" , "<left>(timeleft)%"
+		   -- AC "on" status
+                   -- , "-O" , "<left>%"
+		   -- AC "idle" status
+                   -- , "-i" , "<left>%"
+               ] 50
+           , Run Date "%a %m/%d %H:%M" "date" 10
+	   , Run Kbd
+	       [ ("us","⌨️us")
+	       , ("jp","⌨️jp")
+	       ]
+	   , Run DiskIO
+	       [ ("/","💽(<total>)")
+	       ] 
+               [ "-H","1000" -- kB
+	       , "-h","red"
+	       , "-m","3"
+	       , "-M","3"
+	       ] 10
+       ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = " <fc=#4286f4>♨</fc> %StdinReader% }{ %dynnetwork% %multicpu% %memory% %diskio% %kbd% %battery% <fc=#ece391>%date%</fc> "
+       }
+
