@@ -5,7 +5,6 @@
 run_apt(){
   local readonly packagelist=(
     # terminal
-    'xterm'
     'rxvt-unicode-256color'
     # langage
     'fcitx-mozc'
