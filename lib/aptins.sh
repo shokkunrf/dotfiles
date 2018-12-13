@@ -22,6 +22,7 @@ run_apt(){
     'libnotify-bin'
     'dunst'
     # sound
+    'alsa-utils'
     'pavucontrol'
     # development
     'build-essential'
