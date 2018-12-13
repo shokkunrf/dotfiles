@@ -17,18 +17,21 @@ run_apt(){
     'xmobar'
     'dmenu'
     'feh'
+    'xinput'
+    # notice
     'libnotify-bin'
     'dunst'
-    'xinput'
+    # sound
+    'pavucontrol'
+    # development
+    'build-essential'
     # other
     'git'
     'ssh'
     'vim'
-    'build-essential'
     'curl'
     'wget'
     'ranger'
-    'pavucontrol'
   )
   echo "start apt install..."
   for item in "${packagelist[@]}"; do
