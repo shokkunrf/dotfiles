@@ -53,8 +53,8 @@ download_dotfiles(){
     echo "$(tput setaf 1)** warning **dotfiles already exists!$(tput sgr0)"
     echo "${DOT_DIRECTORY}"
   else
+    local user='uekyorf'
 #   read -p 'github name: ' user
-    user='uekyorf'
     local DOT_TARBALL="https://github.com/${user}/dotfiles/tarball/master"
     local REMOTE_URL="git@github.com:${user}/dotfiles.git"
 
