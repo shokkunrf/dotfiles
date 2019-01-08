@@ -55,21 +55,17 @@ download_dotfiles(){
   else
     local user='uekyorf'
 #   read -p 'github name: ' user
-    local DOT_TARBALL="https://github.com/${user}/dotfiles/tarball/master"
     local REMOTE_URL="git@github.com:${user}/dotfiles.git"
 
    echo 'Downloading dotfiles...'
     mkdir "${DOT_DIRECTORY}"
 
-    # if has "git"; then
     if type "git" > /dev/null 2>&1 ; then
       git clone --recursive "${REMOTE_URL}" "${DOT_DIRECTORY}"
+      echo "$(tput setaf 2)Download dotfiles complete!. ✔︎$(tput sgr0)"
     else
-      curl -fsSLo ${HOME}/dotfiles.tar.gz ${DOT_TARBALL}
-      tar -zxf ${HOME}/dotfiles.tar.gz --strip-components 1 -C ${DOT_DIRECTORY}
-      rm -f ${HOME}/dotfiles.tar.gz
+      echo "git not found"
     fi
-    echo "$(tput setaf 2)Download dotfiles complete!. ✔︎$(tput sgr0)"
   fi
 }
 
