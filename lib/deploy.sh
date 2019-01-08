@@ -13,15 +13,19 @@
 #########################
 symbolink(){
   local readonly DOT_DIRECTORY="$1"
+  local readonly linkList=(
+    '.bash_aliases'
+    '.bash_profile'
+    '.bashrc'
+    '.Xmodmap'
+    '.Xresources'
+    'bin'
+  )
   cd "${DOT_DIRECTORY}"
 
   echo "link start..."
-  for file in .??*; do
-    [ "${file}" = ".git" ] && continue
-    [ "${file}" = ".gitignore" ] && continue
-
-    ln -sv "${DOT_DIRECTORY}/${file}" "${HOME}/${file}" || \
-      echo "err ${file}"
+  for file in linkList; do
+    ln -sv "${DOT_DIRECTORY}/${file}" "${HOME}/${file}"
   done
   echo "$(tput setaf 2)Deploy dotfiles complete!. ✔︎$(tput sgr0)"
 }
