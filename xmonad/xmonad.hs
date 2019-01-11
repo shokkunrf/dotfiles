@@ -149,11 +149,11 @@ addtionalBind =
     , ("M4-C-S-<Page_Down>"  , shiftNextScreen
                            <+> nextScreen)
     -- Volume setting media keys
-    , ("<XF86AudioRaiseVolume>" , spawn "set_volume.sh up")
-    , ("<XF86AudioLowerVolume>" , spawn "set_volume.sh down")
-    , ("<XF86AudioMute>"        , spawn "set_volume.sh mute")
+    , ("<XF86AudioRaiseVolume>" , spawn "set-volume up")
+    , ("<XF86AudioLowerVolume>" , spawn "set-volume down")
+    , ("<XF86AudioMute>"        , spawn "set-volume mute")
     -- TouchPad toggle
-    , ("M1-<Space>" , spawn "set_touchpad.sh")
+    , ("M1-<Space>" , spawn "set-touchpad")
     ]
 
 --
