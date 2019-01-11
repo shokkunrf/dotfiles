@@ -35,12 +35,12 @@ run_apt(){
   )
   echo "start apt install..."
   for item in "${packagelist[@]}"; do
-    sudo apt install -y "${item}"
+    apt install -y "${item}"
   done
   echo "finished apt install"
 
-  sudo apt update
-  sudo apt upgrade
+  apt update
+  apt upgrade
 }
 run_apt
 
