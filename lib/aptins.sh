@@ -25,6 +25,7 @@ run_apt(){
     'pavucontrol'
     # development
     'build-essential'
+    'nodejs'
     # other
     'git'
     'ssh'
@@ -33,6 +34,10 @@ run_apt(){
     'wget'
     'ranger'
   )
+
+  # nodejs
+  curl -sL https://deb.nodesource.com/setup_10.x | bash -
+
   echo "start apt install..."
   for item in "${packagelist[@]}"; do
     apt install -y "${item}"
