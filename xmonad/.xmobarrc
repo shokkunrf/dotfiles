@@ -17,7 +17,7 @@ Config { font = "xft:Migu 1M:size=9"
                , "--high"     , "darkorange"
                ] 10
            , Run MultiCpu
-	       [ "-t"       , "■(<total>%)"
+	       [ "-t"       , "cpu(<total>%)"
                , "--Low"    , "10"
                , "--High"   , "50"
                , "-m"       , "2"
@@ -26,7 +26,7 @@ Config { font = "xft:Migu 1M:size=9"
                , "--high"   , "red"
                ] 10
            , Run Memory
-	       [ "-t"       , "□(<usedratio>%)"
+	       [ "-t"       , "ram(<usedratio>%)"
                , "--Low"    , "50"
                , "--High"   , "70"
                , "-m"       , "2"
@@ -35,7 +35,7 @@ Config { font = "xft:Migu 1M:size=9"
                , "--high"   , "red"
                ] 10
            , Run Battery
-               [ "-t"       , "🔋(<left>%)"
+               [ "-t"       , "bat(<left>%)"
                , "--Low"    , "20"
                , "--High"   , "50"
                , "--low"    , "red"
@@ -51,12 +51,8 @@ Config { font = "xft:Migu 1M:size=9"
                    -- , "-i" , "<left>%"
                ] 50
            , Run Date "%a %m/%d %H:%M" "date" 10
-	   , Run Kbd
-	       [ ("us","⌨️us")
-	       , ("jp","⌨️jp")
-	       ]
 	   , Run DiskIO
-	       [ ("/","💽(<total>)")
+	       [ ("/","rom(<total>)")
 	       ] 
                [ "-H","1000" -- kB
 	       , "-h","red"
@@ -66,6 +62,6 @@ Config { font = "xft:Migu 1M:size=9"
        ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = " <fc=#4286f4>♨</fc> %StdinReader% }{ %dynnetwork% %multicpu% %memory% %diskio% %kbd% %battery% <fc=#ece391>%date%</fc> "
+       , template = " <fc=#4286f4>♨</fc> %StdinReader% }{ %dynnetwork% %multicpu% %memory% %diskio% %battery% <fc=#ece391>%date%</fc> "
        }
 
