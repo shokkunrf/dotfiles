@@ -19,6 +19,7 @@ symbolink(){
     '.bashrc'
     '.Xmodmap'
     '.Xresources'
+    '.vimrc'
     'bin'
   )
   cd "${DOT_DIRECTORY}"
