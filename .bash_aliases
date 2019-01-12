@@ -1,25 +1,16 @@
 # !/bin/bash
 #
 # bash alias
-echo 'Hello,'
-
 alias sudo="sudo "
 alias la="ls -la"
 alias ks="ls"
 alias mkf="touch"
-
-cdls()
-{
-  \cd "$@" && pwd && ls
-}
-#alias cd="cdls"
 
 alias upd="apt update && apt list --upgradable"
 alias upg="apt upgrade"
 alias ins="apt install"
 
 myps1_path(){
-  # array split'/' pwd
   local readonly DIR_PATH=($(echo $PWD | tr '/' ' '))
   local readonly CURRENT_DIR="${DIR_PATH[${#DIR_PATH[@]}-1]}"
   unset DIR_PATH[${#DIR_PATH[@]}-1]
@@ -41,6 +32,3 @@ auto_cdls(){
 }
 PROMPT_COMMAND="auto_cdls"
 export PS1="${myps1}"
-
-echo "World"
-
