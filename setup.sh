@@ -37,7 +37,7 @@ deploy_dotfiles(){
   else 
     source "${DOT_DIRECTORY}/lib/deploy.sh" "${DOT_DIRECTORY}" 
   fi
-}                    
+}
 
 #########################
 # Download dotfiles
@@ -91,6 +91,24 @@ install_packages(){
   esac
 }
 
+#########################
+# Initialize something
+# Globals:
+#   DOT_DIRECTORY
+# Arguments:
+#   None
+# Return:
+#   None
+#########################
+initialize_dotfiles(){
+  if [ ! -d "${DOT_DIRECTORY}" ] ; then
+    echo "$(tput setaf 1)** warning **dotfiles does not exist!$(tput sgr0)"
+    echo "${DOT_DIRECTORY}"
+  else 
+    source "${DOT_DIRECTORY}/lib/init.sh"
+  fi
+}
+
 if [ "$#" = 0 ] ;then
   SUBCOMMAND="0"
 else
@@ -102,7 +120,7 @@ case "$SUBCOMMAND" in
     download_dotfiles && \
     install_packages && \
     deploy_dotfiles
-    # initialize_dotfiles
+    initialize_dotfiles
     ;;
   deploy)
     deploy_dotfiles
@@ -111,7 +129,7 @@ case "$SUBCOMMAND" in
     download_dotfiles
     ;;
   init*)
-    # initialize_dotfiles
+    initialize_dotfiles
     ;;
   install)
     install_packages
