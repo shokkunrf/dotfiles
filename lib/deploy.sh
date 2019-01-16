@@ -13,7 +13,7 @@
 #########################
 symbolink(){
   local readonly DOT_DIRECTORY="$1"
-  local readonly linkList=(
+  local readonly LINK_LIST=(
     '.bash_aliases'
     '.bash_profile'
     '.bashrc'
@@ -25,7 +25,7 @@ symbolink(){
   cd "${DOT_DIRECTORY}"
 
   echo "link start..."
-  for file in "${linkList[@]}"; do
+  for file in "${LINK_LIST[@]}"; do
     ln -sv "${DOT_DIRECTORY}/${file}" "${HOME}/${file}"
   done
   echo "$(tput setaf 2)Deploy dotfiles complete!. ✔︎$(tput sgr0)"
