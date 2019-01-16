@@ -25,10 +25,8 @@ symbolink(){
   )
   cd "${DOT_DIRECTORY}"
 
-  echo "link start..."
   for file in "${LINK_LIST[@]}"; do
-    ln -sv "${DOT_DIRECTORY}/${file}" "${HOME}/${file}"
+    ln -s "${DOT_DIRECTORY}/${file}" "${HOME}/${file}"
   done
-  echo "$(tput setaf 2)Deploy dotfiles complete!. ✔︎$(tput sgr0)"
 }
 symbolink "$1"
