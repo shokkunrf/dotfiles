@@ -21,6 +21,7 @@ symbolink(){
     '.Xresources'
     '.vimrc'
     'bin'
+    '.xmonad'
   )
   cd "${DOT_DIRECTORY}"
 
