@@ -14,8 +14,8 @@
 symbolink(){
   local readonly DOT_DIRECTORY="$1"
   local readonly LINK_LIST=(
+    '.profile'
     '.bash_aliases'
-    '.bash_profile'
     '.bashrc'
     '.Xmodmap'
     '.Xresources'
