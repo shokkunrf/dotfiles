@@ -33,6 +33,7 @@ run_apt(){
     'curl'
     'wget'
     'ranger'
+    'mysql-server'
   )
 
   # nodejs
