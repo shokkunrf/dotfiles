@@ -154,6 +154,9 @@ addtionalBind =
     , ("<XF86AudioMute>"        , spawn "set-volume mute")
     -- TouchPad toggle
     , ("M1-<Space>" , spawn "set-touchpad")
+    -- Brightness
+    , ("<XF86MonBrightnessUp>" , spawn "set-brightness up")
+    , ("<XF86MonBrightnessDown>" , spawn "set-brightness down")
     ]
 
 --

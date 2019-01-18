@@ -1,0 +1,32 @@
+#!/usr/bin/env python3
+#
+# set xrandr brightness
+import sys
+import subprocess
+
+def commanding (multiCmd) :
+  proc = subprocess.Popen(
+    multiCmd,
+    shell = True,
+    stdout = subprocess.PIPE,
+    stderr = subprocess.PIPE
+    )
+  stdout_data,stderr_data = proc.communicate()
+  return (stdout_data.decode("utf8").strip())
+
+def set_brightness (argv) :
+  SCREEN = commanding("xrandr | grep ' connected' | awk {'print $1'}")
+  brightness = float(commanding("xrandr --verbose | grep 'Brightness' | awk {'print $2'}"))
+  if argv == "up":
+    if brightness < 1:
+      brightness += 0.1
+  elif argv == "down":
+    if brightness > 0.1:
+      brightness -= 0.1
+  else:
+    commanding("notify-send Brightness"+str(brightness))
+  commanding("xrandr --output "+SCREEN+" --brightness "+str(brightness))
+
+if __name__=='__main__':
+  argv = sys.argv[1]
+  set_brightness(argv)
