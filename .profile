@@ -4,6 +4,11 @@ if [ -n "$BASH_VERSION" ]; then
   fi
 fi
 
+hostname="$(uname -a | awk '{print $2}')"
+if [ $hostname = "tsukumo" ] ; then
+	xrandr --output HDMI-1 --primary --left-of VGA-1
+fi
+
 if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
 fi
