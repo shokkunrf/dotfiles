@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Install package apt
+# Install apt package
 
 run_apt(){
   local readonly NECESSARY_PACKAGES=(
@@ -8,6 +8,11 @@ run_apt(){
     'curl'
     'wget'
     'build-essential'
+    'apt-transport-https'
+    'ca-certificates'
+    'gnupg2'
+    'software-properties-common'
+    'snapd'
   )
 
   local readonly APT_PACKAGES=(
@@ -35,10 +40,28 @@ run_apt(){
     'vim'
     'ranger'
     'mysql-server'
+    # PPA
+    'code'
+    'google-chrome-stable'
+    'docker-ce'
+    'docker-ce-cli'
+    'containerd.io'
   )
+
   for package in "${NECESSARY_PACKAGES[@]}"; do
     sudo apt install -y "${package}"
   done
+
+  # chrome
+  curl https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+  sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list'
+  # vscode
+  curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
+  sudo install -o root -g root -m 644 microsoft.gpg /etc/apt/trusted.gpg.d/
+  sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list'
+  # docker
+  curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+  sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
 
   sudo apt update
   for package in "${APT_PACKAGES[@]}"; do
