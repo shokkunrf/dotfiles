@@ -30,10 +30,7 @@ run_apt(){
     # sound
     'alsa-utils'
     'pavucontrol'
-    # development
-    'nodejs'
     # other
-    'git'
     'ssh'
     'vim'
     'ranger'
@@ -42,9 +39,6 @@ run_apt(){
   for package in "${NECESSARY_PACKAGES[@]}"; do
     sudo apt install -y "${package}"
   done
-
-  # nodejs
-  curl -sL https://deb.nodesource.com/setup_10.x | bash -
 
   sudo apt update
   for package in "${APT_PACKAGES[@]}"; do
