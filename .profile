@@ -16,6 +16,6 @@ if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
 fi
 export GOPATH=$HOME/.go
-export PATH=$PATH:/usr/local/go/bin
+export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 
 xmodmap "$HOME/.Xmodmap"
