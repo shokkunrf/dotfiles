@@ -82,7 +82,8 @@ download_dotfiles(){
 install_packages(){
   case "${OSTYPE}" in
     linux-gnu)
-      source "${DOT_DIRECTORY}/lib/aptins.sh"
+      source "${DOT_DIRECTORY}/lib/install_apt.sh"
+      source "${DOT_DIRECTORY}/lib/install_snap.sh"
       ;;
     *)
       echo $(tput setaf 1)Working only Debian!$(tput sgr0)
