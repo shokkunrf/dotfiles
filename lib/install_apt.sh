@@ -3,7 +3,14 @@
 # Install package apt
 
 run_apt(){
-  local readonly packagelist=(
+  local readonly NECESSARY_PACKAGES=(
+    # first
+    'curl'
+    'wget'
+    'build-essential'
+  )
+
+  local readonly APT_PACKAGES=(
     # terminal
     'rxvt-unicode-256color'
     # langage
@@ -24,29 +31,26 @@ run_apt(){
     'alsa-utils'
     'pavucontrol'
     # development
-    'build-essential'
     'nodejs'
     # other
     'git'
     'ssh'
     'vim'
-    'curl'
-    'wget'
     'ranger'
     'mysql-server'
   )
+  for package in "${NECESSARY_PACKAGES[@]}"; do
+    sudo apt install -y "${package}"
+  done
 
   # nodejs
   curl -sL https://deb.nodesource.com/setup_10.x | bash -
 
-  echo "start apt install..."
-  for item in "${packagelist[@]}"; do
-    sudo apt install -y "${item}"
-  done
-  echo "finished apt install"
-
   sudo apt update
-  sudo apt upgrade
+  for package in "${APT_PACKAGES[@]}"; do
+    sudo apt install -y "${package}"
+  done
+
 }
 run_apt
 
