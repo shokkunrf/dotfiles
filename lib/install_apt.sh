@@ -54,7 +54,8 @@ run_apt(){
   done
 
   # fish
-  sudo sh -c "echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/3/Debian_9.0/ /' > /etc/apt/sources.list.d/shells:fish:release:3.list"
+  wget -nv https://download.opensuse.org/repositories/shells:fish:release:3/Debian_9.0/Release.key -O - | sudo apt-key add -
+  sudo sh -c 'echo "deb http://download.opensuse.org/repositories/shells:/fish:/release:/3/Debian_9.0/ /" > /etc/apt/sources.list.d/shells:fish:release:3.list'
   # chrome
   curl https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
   sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list'
