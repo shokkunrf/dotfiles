@@ -13,6 +13,7 @@ run_apt(){
     'gnupg2'
     'software-properties-common'
     'snapd'
+    'python-pip'
   )
 
   local readonly APT_PACKAGES=(
