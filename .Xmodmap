@@ -14,7 +14,7 @@ keycode 43 = h H Left NoSymbol
 keycode 44 = j J Down NoSymbol
 keycode 45 = k K Up NoSymbol
 keycode 46 = l L Right NoSymbol
-! Shift+PageUp to Menu
+! Mode_switch+PageUp to Menu
 keycode 112 = Prior NoSymbol Menu NoSymbol Prior 
 
 add mod1 = Alt_L 
