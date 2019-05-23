@@ -157,6 +157,10 @@ addtionalBind =
     -- Brightness
     , ("<XF86MonBrightnessUp>" , spawn "set-brightness up")
     , ("<XF86MonBrightnessDown>" , spawn "set-brightness down")
+    -- Display lock
+    , ("M1-x" , spawn "slock")
+    -- Notice window's names
+    , ("M1-z" , spawn "lsw | awk '{print $2}' | xargs -I@ notify-send @")
     ]
 
 --
