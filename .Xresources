@@ -29,7 +29,10 @@ URxvt.visualBell:         true
 URxvt.fading:             10
 
 ! Transparency
-! URxvt.depth: 32
+URxvt*inheritPixmap: true
+URxvt*.transparent: true
+! URxvt*.shading: 0 to 99 darkens, 101 to 200 lightens
+URxvt*.shading: 25
 
 !!!
 ! Color settings gruvbox
