@@ -81,9 +81,10 @@ myLogHook argBar = dynamicLogWithPP $ wsPP
     { ppOutput = hPutStrLn argBar
     }
 wsPP = xmobarPP
-    { ppCurrent         = xmobarColor "#ff5252" "" . \s -> ">_<"
-    , ppHidden          = xmobarColor "#f2411e" "" . \s -> "x_x"
-    , ppHiddenNoWindows = xmobarColor "#bf360c" "" . \s -> "^_^"
+    { ppCurrent         = xmobarColor "#ff5252" "" . \s -> "◆"
+    , ppVisible         = xmobarColor "#ff5252" "" . \s -> "▼"
+    , ppHidden          = xmobarColor "#f2411e" "" . \s -> "◇"
+    , ppHiddenNoWindows = xmobarColor "#bf360c" "" . \s -> "□"
     , ppUrgent          = xmobarColor "#000000" "#dc1432"
     , ppSep             = " ::: "
     , ppWsSep           = " "
