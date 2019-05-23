@@ -17,5 +17,6 @@ keycode 46 = l L Right NoSymbol
 ! Shift+PageUp to Menu
 keycode 112 = Prior NoSymbol Menu NoSymbol Prior 
 
-add mod1 = Alt_L Alt_R
+add mod1 = Alt_L 
 add mod4 = Super_R
+add mod5 = Mode_switch
