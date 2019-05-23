@@ -47,7 +47,7 @@ appFloatTitle = ["Event Tester"]
 --
 -- startup
 myStartupHook = do
-    spawn $ "feh --randomize --bg-fill " ++ pthWallpaper
+    spawn $ "feh --recursive --randomize --bg-fill " ++ pthWallpaper
 
 -- layout
 myLayoutHook = avoidStruts $ toggleLayouts (noBorders Full) $ myLayout
