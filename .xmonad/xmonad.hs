@@ -24,6 +24,7 @@ import XMonad.Util.EZConfig            -- removeKeys, additionalKeys
 import XMonad.Util.Run(spawnPipe)      -- spawnPipe, hPutStrLn
 import XMonad.Util.NamedScratchpad     -- Float window location
 import qualified XMonad.StackSet as W  -- myManageHookShift
+import XMonad.Layout.IndependentScreens(countScreens)
 
 -- 
 -- variables
@@ -77,8 +78,8 @@ myManageHookShift = composeAll
     ]
     where mydoShift = doF . liftM2 (.) W.greedyView W.shift
 -- statusbar
-myLogHook argBar = dynamicLogWithPP $ wsPP
-    { ppOutput = hPutStrLn argBar
+myLogHook argBars = dynamicLogWithPP $ wsPP
+    { ppOutput = hPutStrLnMulti argBars
     }
 wsPP = xmobarPP
     { ppCurrent         = xmobarColor "#ff5252" "" . \s -> "◆"
@@ -169,7 +170,9 @@ addtionalBind =
 --
 main :: IO()
 main = do
-    wsbar <- spawnPipe varBar
+    numScreens <- countScreens
+    wsbars <- mapM xmobarScreen [0 .. (numScreens - 1)]
+
     xmonad $ ewmh defaultConfig
         { terminal           = varTerm
         , modMask            = varModm
@@ -183,7 +186,7 @@ main = do
 		           <+> myManageHookFloat
 			   <+> myManageHookShift
         -- statusbar setting
-        , logHook            = myLogHook wsbar
+        , logHook            = myLogHook wsbars
         -- any time Full mode, avoid xmobar area
         , layoutHook         = myLayoutHook
         , handleEventHook    = fullscreenEventHook
@@ -192,3 +195,8 @@ main = do
         `removeKeysP` removeBind
         `additionalKeysP` addtionalBind
 
+xmobarScreen :: Int -> IO Handle
+xmobarScreen = spawnPipe . ("xmobar ~/.xmonad/.xmobarrc -x " ++) . show
+
+hPutStrLnMulti :: [Handle] -> String -> IO ()
+hPutStrLnMulti handles string = mapM_ (`hPutStrLn` string) handles
