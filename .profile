@@ -1,9 +1,3 @@
-if [ -n "$BASH_VERSION" ]; then
-  if [ -f "$HOME/.bashrc" ]; then
-    . "$HOME/.bashrc"
-  fi
-fi
-
 case "$(uname -a | awk '{print $2}')" in
   "tsukumo")
   	xrandr --output HDMI-1 --primary --left-of VGA-1
