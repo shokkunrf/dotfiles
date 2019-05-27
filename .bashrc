@@ -1,7 +1,3 @@
-# /bin/bash
-#
-#
-
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
@@ -29,3 +25,4 @@ auto_cdls(){
 PROMPT_COMMAND="auto_cdls"
 export PS1="${myps1}"
 
+xonsh

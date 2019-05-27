@@ -1,0 +1,36 @@
+# -*- coding: utf-8 -*-
+$COMPLETIONS_CONFIRM = True            # 補完をEnterで直接実行しない
+$INDENT = "    "                       # tabではなく空白4つ
+$CASE_SENSITIVE_COMPLETIONS = False    # 補完時に大小区別しない
+$HISTCONTROL = "ignoredups"            # 連続重複コマンドを保存しない
+$XONSH_AUTOPAIR = True                 # 括弧を補完
+$AUTO_CD = True                        # ディレクトリ名を入力でcd
+$XONSH_SHOW_TRACEBACK = True           # エラー全て吐くように
+$UPDATE_COMPLETIONS_ON_KEYPRESS = True # キー入力即評価（サイコー）
+
+# プロンプトの表記
+$PROMPT = "{INTENSE_RED}{user}{INTENSE_GREEN}@{INTENSE_BLUE}{hostname}{INTENSE_YELLOW} [ {cwd} ] {GREEN}$ "
+# lsコマンドの結果の見た目
+#$LS_COLORS="di=34:ln=35:so=32:pi=33:ex=31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30"
+#$PROMPT = "{INTENSE_YELLOW}[ {cwd} ] {GREEN}$ "
+# 下部にuser, host情報を追加
+#$BOTTOM_TOOLBAR = "{BACKGROUND_WHITE}{BLACK}{user}@{hostname}"
+# 右にbranch情報
+#$RIGHT_PROMPT = "{curr_branch}"
+
+# aliases
+# aliases['ls'] = "ls --color=auto"
+aliases["ll"] = "ls -l"
+aliases["la"] = "ls -la"
+aliases["mv"] = "mv -i"
+aliases["cp"] = "cp -i"
+aliases["rm"] = "rm -i"
+
+#aliases["sudo"] = "sudo "
+aliases["ins"] = "apt install"
+aliases["upd"] = "apt update" #&& apt list --upgradable"
+aliases["upg"] = "apt upgrade"
+
+aliases['python'] = 'python3'
+aliases['pip'] = 'pip3'
+aliases['pt'] = 'ptpython'
