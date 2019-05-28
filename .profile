@@ -6,11 +6,10 @@ case "$(uname -a | awk '{print $2}')" in
     ;;
 esac
 
-if [ -d "$HOME/bin" ] ; then
-    PATH="$HOME/bin:$PATH"
-fi
-PATH="$HOME/_bin:$PATH"
-export GOPATH=$HOME/.go
-export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
+PATH="$PATH:$HOME/bin"
+PATH="$PATH:$HOME/_bin"
+export GOPATH="$HOME/.go"
+PATH="$PATH:/usr/local/go/bin:$GOPATH/bin"
+export PATH
 
 xmodmap "$HOME/.Xmodmap"
