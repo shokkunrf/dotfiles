@@ -4,7 +4,6 @@
 install_snap(){
   local readonly SNAP_PACKAGES=(
     'go'
-    'node --channel=10'
     'slack'
   )
 
