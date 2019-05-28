@@ -40,36 +40,6 @@ deploy_dotfiles(){
 }
 
 #########################
-# Download dotfiles
-# Globals:
-#   DOT_DIRECTORY
-# Arguments:
-#   None 
-# Returns:
-#   None
-#########################
-download_dotfiles(){
-  if [ -d "${DOT_DIRECTORY}" ] ; then
-    echo "$(tput setaf 1)** warning **dotfiles already exists!$(tput sgr0)"
-    echo "${DOT_DIRECTORY}"
-  else
-    local user='uekyorf'
-#   read -p 'github name: ' user
-    local REMOTE_URL="git@github.com:${user}/dotfiles.git"
-
-   echo 'Downloading dotfiles...'
-    mkdir "${DOT_DIRECTORY}"
-
-    if type "git" > /dev/null 2>&1 ; then
-      git clone --recursive "${REMOTE_URL}" "${DOT_DIRECTORY}"
-      echo "$(tput setaf 2)Download dotfiles complete!. ✔︎$(tput sgr0)"
-    else
-      echo "git not found"
-    fi
-  fi
-}
-
-#########################
 # Install packages
 # Globals:
 #   OSTYPE
@@ -118,16 +88,12 @@ fi
 
 case "$SUBCOMMAND" in
   setup)
-    download_dotfiles && \
     install_packages && \
     deploy_dotfiles
     initialize_dotfiles
     ;;
   deploy)
     deploy_dotfiles
-    ;;
-  download)
-    download_dotfiles
     ;;
   init*)
     initialize_dotfiles
