@@ -10,6 +10,9 @@ PATH="$PATH:$HOME/bin"
 PATH="$PATH:$HOME/_bin"
 export GOPATH="$HOME/.go"
 PATH="$PATH:/usr/local/go/bin:$GOPATH/bin"
+PATH="$PATH:$HOME/.anyenv/bin"
 export PATH
+
+eval "$(anyenv init -)"
 
 xmodmap "$HOME/.Xmodmap"

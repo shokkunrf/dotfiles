@@ -18,3 +18,6 @@ curl -fsSL "https://github.com/peco/peco/releases/download/${latest}/peco_linux_
   tar -xz --to-stdout peco_linux_amd64/peco > $HOME/_bin/peco
 
 chmod +x $HOME/_bin/peco
+
+# anyenv
+git clone https://github.com/anyenv/anyenv ~/.anyenv
