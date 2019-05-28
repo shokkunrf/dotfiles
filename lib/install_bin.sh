@@ -12,11 +12,7 @@ latest=$(
 
 : ${latest:?}
 
-mkdir -p $HOME/bin
-
 curl -fsSL "https://github.com/peco/peco/releases/download/${latest}/peco_linux_amd64.tar.gz" |
-  tar -xz --to-stdout peco_linux_amd64/peco > $HOME/bin/peco
+  tar -xz --to-stdout peco_linux_amd64/peco | sudo tee /usr/local/bin/peco >/dev/null
 
-chmod +x $HOME/bin/peco
-
-$HOME/bin/peco --version
+sudo chmod +x /usr/local/bin/peco
