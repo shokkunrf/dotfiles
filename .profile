@@ -16,3 +16,7 @@ export PATH
 eval "$(anyenv init -)"
 
 xmodmap "$HOME/.Xmodmap"
+
+if [ -f ~/.bashrc ]; then
+  . ~/.bashrc
+fi
