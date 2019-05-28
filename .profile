@@ -1,3 +1,4 @@
+xset -b #ビープ音を鳴らさない
 case "$(uname -a | awk '{print $2}')" in
   "tsukumo")
   	xrandr --output HDMI-1 --primary --left-of VGA-1
