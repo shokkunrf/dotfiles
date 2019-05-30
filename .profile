@@ -18,6 +18,8 @@ eval "$(anyenv init -)"
 
 xmodmap "$HOME/.Xmodmap"
 
-if [ -f ~/.bashrc ]; then
-  . ~/.bashrc
+if [ -n "$BASH_VERSION" ]; then
+  if [ -f "$HOME/.bashrc" ]; then
+    . "$HOME/.bashrc"
+  fi
 fi
