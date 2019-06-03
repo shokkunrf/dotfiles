@@ -22,6 +22,7 @@ run_apt(){
     # langage
     'fcitx-mozc'
     # GUI
+    'gnome'
     'xorg'
     'firefox-esr'
     # xmonad
