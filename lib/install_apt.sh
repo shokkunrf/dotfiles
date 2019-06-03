@@ -41,6 +41,7 @@ run_apt(){
     'vim'
     'ranger'
     'mysql-server'
+    'wmctrl'
     # PPA
     'code'
     'google-chrome-stable'
