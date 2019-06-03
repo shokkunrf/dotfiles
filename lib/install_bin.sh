@@ -21,3 +21,4 @@ chmod +x $HOME/_bin/peco
 
 # anyenv
 git clone https://github.com/anyenv/anyenv ~/.anyenv
+anyenv install --init
