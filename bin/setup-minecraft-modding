@@ -1,0 +1,17 @@
+#!/bin/bash
+# Minecraft Modding
+# Check Yes No
+read -p "Ready? [y/N]: " yn
+if [ "$yn" != "y" ]; then
+	exit
+fi
+
+# Install JDK8 for Debian9
+sudo apt install default-jdk
+
+# Download mdk(Minecraft Forge)
+wget "http://files.minecraftforge.net/maven/net/minecraftforge/forge/1.12.2-14.23.5.2768/forge-1.12.2-14.23.5.2768-mdk.zip" 
+unzip "forge-1.12.2-14.23.5.2768-mdk.zip"
+
+# Install DevEnv
+./gradlew setupDecompWorkspace
