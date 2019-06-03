@@ -163,6 +163,8 @@ addtionalBind =
     , ("M1-x" , spawn "slock")
     -- Notice window names
     , ("M1-z" , spawn "lsw | xargs -I@ notify-send @")
+    -- Select window
+    , ("M1-<Tab>" , spawn "select-window")
     ]
 
 --
