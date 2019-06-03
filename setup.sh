@@ -4,9 +4,12 @@ set -eu
 DOT_DIRECTORY=`dirname $0`
 
 setup(){
+  . "${DOT_DIRECTORY}/lib/deploy.sh" "${DOT_DIRECTORY}" 
+
   case "${OSTYPE}" in
     linux-gnu)
       . "${DOT_DIRECTORY}/lib/install_apt.sh"
+      exec $SHELL -l
       . "${DOT_DIRECTORY}/lib/install_snap.sh"
       . "${DOT_DIRECTORY}/lib/install_goget.sh"
       . "${DOT_DIRECTORY}/lib/install_pip3.sh"
@@ -17,8 +20,6 @@ setup(){
       exit 1
       ;;
   esac
-
-  . "${DOT_DIRECTORY}/lib/deploy.sh" "${DOT_DIRECTORY}" 
 
   . "${DOT_DIRECTORY}/lib/init.sh"
 } >/dev/null
