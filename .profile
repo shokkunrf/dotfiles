@@ -3,6 +3,9 @@ case "$(uname -a | awk '{print $2}')" in
   "tsukumo")
   	xrandr --output HDMI-1 --primary --left-of VGA-1
     ;;
+  "asparagus" )
+    xrandr --output DP-3 --primary --left-of HDMI-0
+    ;;
   *)
     ;;
 esac
