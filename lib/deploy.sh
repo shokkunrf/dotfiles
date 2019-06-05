@@ -12,7 +12,7 @@
 #   None
 #########################
 symbolink(){
-  local readonly DOT_DIRECTORY="$1"
+  local readonly DOT_DIRECTORY="$HOME/dotfiles"
   local readonly LINK_LIST=(
     '.profile'
     '.bash_aliases'
@@ -23,10 +23,9 @@ symbolink(){
     'bin'
     '.xmonad'
   )
-  cd "${DOT_DIRECTORY}"
 
   for file in "${LINK_LIST[@]}"; do
-    ln -s "${DOT_DIRECTORY}/${file}" "${HOME}/${file}"
+    ln -s "${DOT_DIRECTORY}/${file}" "${HOME}/"
   done
 }
-symbolink "$1"
+symbolink

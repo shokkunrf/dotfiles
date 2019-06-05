@@ -4,7 +4,7 @@ set -eu
 DOT_DIRECTORY=`dirname $0`
 
 setup(){
-  . "${DOT_DIRECTORY}/lib/deploy.sh" "${DOT_DIRECTORY}" 
+  . "${DOT_DIRECTORY}/lib/deploy.sh"
 
   case "${OSTYPE}" in
     linux-gnu)
