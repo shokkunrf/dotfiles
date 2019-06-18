@@ -1,5 +1,5 @@
 -- vim: ft=haskell
-Config { font = "xft:Migu 1M:size=9"
+Config { font = "xft:Migu 1M:size=12"
        , bgColor = "#0c0c0c"
        , fgColor = "#999999"
        , position = Top
