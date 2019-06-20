@@ -15,3 +15,8 @@ ghq-peco(){
 }
 alias sd="ghq-peco"
 
+cd-gopath(){
+  dir="$(ls $GOPATH/src | peco)"
+  cd "$GOPATH/src/$dir"
+}
+alias gd="cd-gopath"
