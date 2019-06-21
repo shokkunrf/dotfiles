@@ -5,6 +5,7 @@ case "$(uname -a | awk '{print $2}')" in
     ;;
   "asparagus" )
     xrandr --output DP-3 --primary --left-of HDMI-0
+    xrandr --output HDMI-0 --mode 1920x1080
     ;;
   *)
     ;;
