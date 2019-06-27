@@ -15,10 +15,12 @@ PATH="$PATH:$HOME/bin"
 PATH="$PATH:$HOME/_bin"
 export GOPATH="$HOME/.go"
 PATH="$PATH:/usr/local/go/bin:$GOPATH/bin"
-PATH="$PATH:$HOME/.anyenv/bin"
 export PATH
 
-eval "$(anyenv init -)"
+if [ -d $HOME/.anyenv ]; then
+  export PATH="$PATH:$HOME/.anyenv/bin"
+  eval "$(anyenv init -)"
+fi
 
 xmodmap "$HOME/.Xmodmap"
 
@@ -27,3 +29,4 @@ if [ -n "$BASH_VERSION" ]; then
     . "$HOME/.bashrc"
   fi
 fi
+
