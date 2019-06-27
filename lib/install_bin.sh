@@ -22,3 +22,9 @@ chmod +x $HOME/_bin/peco
 # anyenv
 git clone https://github.com/anyenv/anyenv ~/.anyenv
 anyenv install --init
+
+
+# docker-compose
+curl -L "https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)" -o ~/_bin/docker-compose
+chmod +x ~/_bin/docker-compose
+
