@@ -12,7 +12,7 @@
 #   None
 #########################
 symbolink(){
-  local readonly DOT_DIRECTORY="$HOME/dotfiles"
+  local readonly DOT_DIRECTORY=`dirname $0`/..
   local readonly LINK_LIST=(
     '.profile'
     '.bash_aliases'
