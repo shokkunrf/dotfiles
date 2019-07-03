@@ -25,6 +25,14 @@ anyenv install --init
 
 
 # docker-compose
-curl -L "https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)" -o ~/_bin/docker-compose
-chmod +x ~/_bin/docker-compose
+latest=$(
+  curl -fsSI https://github.com/docker/compose/releases/latest |
+    tr -d '\r' |
+    awk -F'/' '/^Location:/{print $NF}'
+)
 
+: ${latest:?}
+
+curl -L "https://github.com/docker/compose/releases/download/${latest}/docker-compose-$(uname -s)-$(uname -m)" -o ~/_bin/docker-compose
+
+chmod +x ~/_bin/docker-compose
