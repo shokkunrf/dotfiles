@@ -36,3 +36,7 @@ latest=$(
 curl -L "https://github.com/docker/compose/releases/download/${latest}/docker-compose-$(uname -s)-$(uname -m)" -o ~/_bin/docker-compose
 
 chmod +x ~/_bin/docker-compose
+
+# haskell stack
+sudo bash -c 'curl -sSL https://get.haskellstack.org/ | bash'
+
