@@ -49,6 +49,7 @@ run_apt(){
     'docker-ce'
     'docker-ce-cli'
     'containerd.io'
+    'virtualbox-6.0'
   )
 
   for package in "${NECESSARY_PACKAGES[@]}"; do
@@ -65,6 +66,9 @@ run_apt(){
   # docker
   curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
   sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
+  # VirtualBox
+  curl -fsSL https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo apt-key add -
+  sudo add-apt-repository "deb https://download.virtualbox.org/virtualbox/debian stretch contrib"
 
   # slack
   wget -O slack.deb  'https://downloads.slack-edge.com/linux_releases/slack-desktop-3.4.2-amd64.deb'
