@@ -166,6 +166,8 @@ addtionalBind =
     , ("M1-<Tab>" , spawn "select-window")
     -- Chrome
     , ("M4-t" ,  spawn "google-chrome google.com")
+    -- Reset the layouts on the current workspace to default
+    , ("M1-S-<Space>" , withFocused $ windows . W.sink)
     ]
 
 --
