@@ -73,6 +73,7 @@ run_apt(){
   # slack
   wget -O slack.deb  'https://downloads.slack-edge.com/linux_releases/slack-desktop-3.4.2-amd64.deb'
   sudo apt install -y ./slack.deb
+  rm slack.deb
   # Vagrant
   wget -O vagrant.deb "https://releases.hashicorp.com/vagrant/2.2.5/vagrant_2.2.5_x86_64.deb"
   sudo apt install -y ./vagrant.deb
