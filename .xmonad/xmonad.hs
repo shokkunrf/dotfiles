@@ -11,12 +11,7 @@ import XMonad.Hooks.ManageDocks        -- avoid xmobar area
 import XMonad.Hooks.EwmhDesktops       -- full screen event
 import XMonad.Layout
 import XMonad.Layout.Spacing           -- this makes smart space around windows
-import XMonad.Layout.Simplest           
-import XMonad.Layout.TwoPane          
 import XMonad.Layout.ThreeColumns      -- for many windows
-import XMonad.Layout.Magnifier         -- this makes window bigger
-import XMonad.Layout.ResizableTile     -- Resizable Horizontal border
-import XMonad.Layout.DragPane          -- see only two window
 import XMonad.Layout.ToggleLayouts     -- Full window at any time
 import XMonad.Layout.NoBorders         -- In Full mode, border is no use
 import XMonad.Layout.Gaps
@@ -28,7 +23,6 @@ import XMonad.Layout.IndependentScreens(countScreens)
 
 -- 
 -- variables
--- var:otherVariable, wid:width, pth:path, col:color, app:application
 --
 varTerm       = "urxvt"
 varModm       = mod4Mask -- Win key or Super_L
@@ -40,8 +34,6 @@ widEdge       = -widGap
 pthWallpaper  = "~/Pictures/wallpapers/*"
 colBorder     = "#81daf5"
 colFocused    = "#2e64fe"
-appFloatClass = ["Nautilus","Gimp"]
-appFloatTitle = ["Event Tester"]
 
 --
 -- function
@@ -58,11 +50,6 @@ myLayout = spacing widGap  $ gaps [(U,widEdge),(D,widEdge),(L,widEdge),(R,widEdg
             first  = Tall 1 (1/100) (1/2)
             second = Full
             third  = ThreeCol 1 (1/100) (1/2)
---	    third  = TwoPane (1/100)(1/2)
---          third  = ResizableTall 0 (3/100) (3/5) []
---          third  = Simplest
---          third  = (dragPane Vertical   (1/10) (1/2))
---          third  = (dragPane Horizontal (1/10) (1/2))
 
 -- new window will created in Float mode
 myManageHookFloat = composeAll
@@ -99,7 +86,6 @@ wsPP = xmobarPP
 removeBind =
     [ "M-<Return>"
     , "M-S-<Return>"
---  , "M-<Space>"
     , "M-<Tab>"
     , "M-q"
     , "M-S-q"
@@ -109,9 +95,7 @@ removeBind =
     ]
 addtionalBind = 
     [ ("M4-<Return>"  , spawn varTerm)
---  , ("M4-<Space>"   , spawn "exe=`dmenu_path | dmenu` && eval \"exec $exe\"")
     , ("M4-<Tab>"   , spawn "exe=`dmenu_path | dmenu` && eval \"exec $exe\"")
---  , ("M4-<Tab>"     , sendMessage NextLayout)
     , ("M4-b"         , sendMessage ToggleStruts)
     -- Move the focus
     , ("M4-<D>"  , windows W.focusDown)
@@ -188,14 +172,13 @@ main = do
         , startupHook        = myStartupHook
         , manageHook         = manageDocks
                            <+> manageHook defaultConfig
-		           <+> myManageHookFloat
-			   <+> myManageHookShift
+                           <+> myManageHookFloat
+                           <+> myManageHookShift
         -- statusbar setting
         , logHook            = myLogHook wsbars
         -- any time Full mode, avoid xmobar area
         , layoutHook         = myLayoutHook
         , handleEventHook    = fullscreenEventHook
-	                 --  <+> fadeWindowsEventHook
         }
         `removeKeysP` removeBind
         `additionalKeysP` addtionalBind
