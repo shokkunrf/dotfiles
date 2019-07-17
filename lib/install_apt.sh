@@ -70,6 +70,11 @@ run_apt(){
   curl -fsSL https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo apt-key add -
   sudo add-apt-repository "deb https://download.virtualbox.org/virtualbox/debian stretch contrib"
 
+  sudo apt update
+  for package in "${APT_PACKAGES[@]}"; do
+    sudo apt install -y "${package}"
+  done
+
   # slack
   wget -O slack.deb  'https://downloads.slack-edge.com/linux_releases/slack-desktop-3.4.2-amd64.deb'
   sudo apt install -y ./slack.deb
@@ -78,12 +83,6 @@ run_apt(){
   wget -O vagrant.deb "https://releases.hashicorp.com/vagrant/2.2.5/vagrant_2.2.5_x86_64.deb"
   sudo apt install -y ./vagrant.deb
   rm vagrant.deb
-
-  sudo apt update
-  for package in "${APT_PACKAGES[@]}"; do
-    sudo apt install -y "${package}"
-  done
-
 }
 run_apt
 
