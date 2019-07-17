@@ -4,7 +4,6 @@
 install_snap(){
   local readonly SNAP_PACKAGES=(
     'go'
-    'slack'
   )
 
   for package in "${SNAP_PACKAGES[@]}"; do

@@ -66,6 +66,10 @@ run_apt(){
   curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
   sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
 
+  # slack
+  wget -O slack.deb  'https://downloads.slack-edge.com/linux_releases/slack-desktop-3.4.2-amd64.deb'
+  sudo apt install ./slack.deb
+
   sudo apt update
   for package in "${APT_PACKAGES[@]}"; do
     sudo apt install -y "${package}"
