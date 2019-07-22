@@ -53,9 +53,7 @@ myLayout = spacing widGap  $ gaps [(U,widEdge),(D,widEdge),(L,widEdge),(R,widEdg
 
 -- new window will created in Float mode
 myManageHookFloat = composeAll
-    [ className =? "Nautilus"     --> doFloat
-    , className =? "Gimp"         --> doFloat
-    , title     =? "Event Tester" --> xevFloat
+    [ title     =? "Event Tester" --> xevFloat
     ]
     where xevFloat = customFloating $ W.RationalRect (1/2) (1/60) (1/16) (1/9)
 -- new window shift
