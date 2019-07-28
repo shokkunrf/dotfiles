@@ -40,3 +40,7 @@ chmod +x ~/_bin/docker-compose
 # haskell stack
 sudo bash -c 'curl -sSL https://get.haskellstack.org/ | bash'
 
+# krita
+wget -O ~/_bin/krita 'https://download.kde.org/stable/krita/4.2.3/krita-4.2.3-x86_64.appimage'
+chmod u+x krita
+
