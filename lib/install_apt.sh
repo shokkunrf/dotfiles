@@ -43,6 +43,9 @@ run_apt(){
     'ranger'
     'mysql-server'
     'wmctrl'
+    # ruby
+    'libssl-dev'
+    'libreadline-dev'
     # PPA
     'code'
     'google-chrome-stable'
