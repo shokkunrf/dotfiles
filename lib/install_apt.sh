@@ -41,7 +41,6 @@ run_apt(){
     'ssh'
     'vim'
     'ranger'
-    'mysql-server'
     'wmctrl'
     # ruby
     'libssl-dev'
