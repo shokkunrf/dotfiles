@@ -150,6 +150,10 @@ addtionalBind =
     , ("M4-t" ,  spawn "google-chrome google.com")
     -- Reset the layouts on the current workspace to default
     , ("M1-S-<Space>" , withFocused $ windows . W.sink)
+    -- Gnome Control Center
+    , ("<XF86Tools>" , spawn "gnome-control-center")
+    -- Gnome Screen Shot
+    , ("<Print>" , spawn "gnome-screenshot")
     ]
 
 --
