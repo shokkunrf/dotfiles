@@ -1,5 +1,4 @@
-# !/bin/bash
-#
+# !/bin/bash #
 # bash alias
 alias sudo="sudo "
 alias la="ls -la"
@@ -21,3 +20,5 @@ cd-gopath(){
   cd "$GOPATH/src/$dir"
 }
 alias gd="cd-gopath"
+
+alias rm='mv --backup=numbered --target-directory=${HOME}/.local/share/Trash/files/'
