@@ -29,3 +29,5 @@ symbolink(){
   done
 }
 symbolink
+
+ln -s $HOME/.local/share/Trash/files $HOME/.Trash
