@@ -21,4 +21,4 @@ cd-gopath(){
 }
 alias gd="cd-gopath"
 
-alias rm='mv --backup=numbered --target-directory=${HOME}/.local/share/Trash/files/'
+alias rm='mv --backup=numbered --target-directory=${HOME}/.Trash/'
