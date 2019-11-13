@@ -1,5 +1,14 @@
 #!/bin/bash
 
+auto_cdls(){
+  if [ "$OLDPWD" != "$PWD" ]; then
+    ls
+    OLDPWD="$PWD"
+    PS1="${myps1}"
+  fi
+}
+PROMPT_COMMAND="auto_cdls"
+
 myps1_path(){
   local readonly DIR_PATH=($(echo $PWD | tr '/' ' '))
   local readonly CURRENT_DIR="${DIR_PATH[${#DIR_PATH[@]}-1]}"
@@ -13,14 +22,6 @@ myps1_path(){
 }
 
 myps1='\[\e[1;32m\]$(myps1_path)\[\e[0;32m\]$ \[\e[0m\]'
-auto_cdls(){
-  if [ "$OLDPWD" != "$PWD" ]; then
-    ls
-    OLDPWD="$PWD"
-    PS1="${myps1}"
-  fi
-}
-PROMPT_COMMAND="auto_cdls"
 export PS1="${myps1}"
 
 if [ -f ~/.bash_aliases ]; then
