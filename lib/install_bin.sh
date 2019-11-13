@@ -44,3 +44,5 @@ sudo bash -c 'curl -sSL https://get.haskellstack.org/ | bash'
 wget -O ~/_bin/krita 'https://download.kde.org/stable/krita/4.2.3/krita-4.2.3-x86_64.appimage'
 chmod u+x krita
 
+# git-prompt
+wget -O ~/.git-prompt.sh 'https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh'
