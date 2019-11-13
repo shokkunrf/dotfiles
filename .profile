@@ -16,6 +16,7 @@ PATH="$PATH:$HOME/_bin"
 export GOPATH="$HOME/.go"
 PATH="$PATH:/usr/local/go/bin:$GOPATH/bin"
 PATH="$PATH:/root/.local/bin"
+PATH="$PATH:./node_modules/.bin"
 export PATH
 
 if [ -d $HOME/.anyenv ]; then
