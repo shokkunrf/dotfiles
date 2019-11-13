@@ -1,10 +1,4 @@
-# /bin/bash
-#
-#
-
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
-fi
+#!/bin/bash
 
 myps1_path(){
   local readonly DIR_PATH=($(echo $PWD | tr '/' ' '))
@@ -29,3 +23,6 @@ auto_cdls(){
 PROMPT_COMMAND="auto_cdls"
 export PS1="${myps1}"
 
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
