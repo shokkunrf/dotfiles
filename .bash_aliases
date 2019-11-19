@@ -22,3 +22,5 @@ cd-gopath(){
 alias gd="cd-gopath"
 
 alias rm='mv --backup=numbered --target-directory=${HOME}/.Trash/'
+
+alias g='git'
