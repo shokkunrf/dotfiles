@@ -142,6 +142,8 @@ addtionalBind =
     -- Brightness
     , ("<XF86MonBrightnessUp>" , spawn "set-brightness up")
     , ("<XF86MonBrightnessDown>" , spawn "set-brightness down")
+    -- Mirroring
+    , ("<XF86Display>" , spawn "xrandr-mirror")
     -- Display lock
     , ("M1-x" , spawn "slock")
     -- Select window
