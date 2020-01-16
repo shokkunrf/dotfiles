@@ -89,7 +89,6 @@ removeBind =
     , "M-S-q"
     , "M-S-c"
     , "M-S-p"
-    , "M-t"
     ]
 addtionalBind = 
     [ ("M4-<Return>"  , spawn varTerm)
@@ -148,8 +147,6 @@ addtionalBind =
     , ("M1-x" , spawn "slock")
     -- Select window
     , ("M1-<Tab>" , spawn "select-window")
-    -- Chrome
-    , ("M4-t" ,  spawn "google-chrome google.com")
     -- Reset the layouts on the current workspace to default
     , ("M1-S-<Space>" , withFocused $ windows . W.sink)
     -- Gnome Control Center
