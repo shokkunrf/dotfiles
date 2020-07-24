@@ -5,6 +5,10 @@ alias la="ls -la"
 alias ks="ls"
 alias mkf="touch"
 alias ivm="vim"
+alias g="git"
+alias v="vagrant"
+alias d="docker"
+alias dc="docker-compose"
 
 ghq-peco(){
   cd "$( ghq list -p | peco)"
@@ -17,7 +21,10 @@ cd-gopath(){
 }
 alias gd="cd-gopath"
 
-alias rm='mv --backup=numbered --target-directory=${HOME}/.Trash/'
+re-login(){
+  exec $SHELL -l
+}
+alias lo=re-"login"
 
-alias g='git'
+alias rm='mv --backup=numbered --target-directory=${HOME}/.Trash/'
 
