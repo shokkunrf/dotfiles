@@ -1,0 +1,4 @@
+#!/usr/local/zsh
+# zsh aliases
+. $HOME/mixin/.shell_aliases
+
