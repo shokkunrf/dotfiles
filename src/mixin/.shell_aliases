@@ -27,5 +27,3 @@ re-login(){
 }
 alias lo=re-"login"
 
-alias rm='mv --backup=numbered --target-directory=${HOME}/.Trash/'
-
