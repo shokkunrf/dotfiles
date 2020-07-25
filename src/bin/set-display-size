@@ -1,0 +1,8 @@
+#!/bin/bash
+#
+# Set display size in VirtualBox
+# Argument: "FHD"|"HD"
+
+display='Virtual1'
+xrandr --output $display --mode $1
+
