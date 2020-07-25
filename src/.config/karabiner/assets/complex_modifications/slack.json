@@ -1,0 +1,30 @@
+{
+    "title": "Slack shortcuts like windows",
+    "conditions": [
+        {
+          "type": "frontmost_application_if",
+          "bundle_identifiers": [
+            "^com\\.tinyspeck\\.slackmacgap"
+          ]
+        }
+    ],
+    "rules": [
+        {
+            "description": "Slack: Ctrl+Enter to Command+Enter",
+            "manipulators": [
+                {
+                    "from": { "key_code": "return_or_enter",
+                        "modifiers": { "mandatory": [ "control" ] } },
+                    "to": [ { "key_code": "return_or_enter",
+                        "modifiers": [ "left_gui"] } ],
+                    "type": "basic"
+                },
+                {
+                    "from": { "key_code": "return_or_enter",
+                        "modifiers": { "mandatory": [ "command" ] } },
+                    "type": "basic"
+                }
+            ]
+        }
+    ]
+}

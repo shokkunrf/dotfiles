@@ -1,0 +1,30 @@
+{
+    "title": "Disable Mac keybindings",
+    "rules": [
+        {
+            "description": "Disable: Ctrl+Arrow",
+            "manipulators": [
+                {
+                    "from": { "key_code": "left_arrow",
+                        "modifiers": { "mandatory": [ "control" ] } },
+                    "type": "basic"
+                },
+                {
+                    "from": { "key_code": "right_arrow",
+                        "modifiers": { "mandatory": [ "control" ] } },
+                    "type": "basic"
+                },
+                {
+                    "from": { "key_code": "up_arrow",
+                        "modifiers": { "mandatory": [ "control" ] } },
+                    "type": "basic"
+                },
+                {
+                    "from": { "key_code": "down_arrow",
+                        "modifiers": { "mandatory": [ "control" ] } },
+                    "type": "basic"
+                }
+            ]
+        }
+    ]
+}

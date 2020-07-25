@@ -1,0 +1,94 @@
+{
+    "title": "Chrome shortcuts like windows",
+    "conditions": [
+        {
+          "type": "frontmost_application_if",
+          "bundle_identifiers": [
+            "^com\\.apple\\.Safari",
+            "^com\\.google\\.Chrome",
+            "^com\\.vivaldi\\.Vivaldi"
+          ]
+        }
+    ],
+    "rules": [
+        {
+            "description": "Chrome: Ctrl+k to Command+Alt+f",
+            "manipulators": [
+                {
+                    "from": { "key_code": "k",
+                        "modifiers": { "mandatory": [ "control" ] } },
+                    "to": [ { "key_code": "f",
+                        "modifiers": [ "left_gui", "left_alt" ] } ],
+                    "type": "basic"
+                }
+            ]
+        },
+        {
+            "description": "Chrome: Alt+left,right_arrow to Command+[,]",
+            "manipulators": [
+                {
+                    "from": { "key_code": "left_arrow",
+                        "modifiers": { "mandatory": [ "left_alt" ] } },
+                    "to": [ { "key_code": "open_bracket",
+                        "modifiers": [ "left_gui" ] } ],
+                    "type": "basic"
+                },
+                {
+                    "from": { "key_code": "right_arrow",
+                        "modifiers": { "mandatory": [ "left_alt" ] } },
+                    "to": [ { "key_code": "close_bracket",
+                        "modifiers": [ "left_gui"] } ],
+                    "type": "basic"
+                }
+            ]
+        },
+        {
+            "description": "Chrome: Ctrl+h to Super+y",
+            "manipulators": [
+                {
+                    "from": { "key_code": "h", "modifiers": { "mandatory": [
+                        "control" ] } },
+                    "to": [ { "key_code": "y", "modifiers": [
+                        "left_gui" ] } ],
+                    "type": "basic"
+                }
+            ]
+        },
+        {
+            "description": "Chrome: Ctrl+r to Super+r",
+            "manipulators": [
+                {
+                    "from": { "key_code": "r",
+                        "modifiers": { "mandatory": [ "control" ], "optional": [ "any" ] } },
+                    "to": [ { "key_code": "r",
+                        "modifiers": [ "left_gui" ] } ],
+                    "type": "basic"
+                }
+            ]
+        },
+        {
+            "description": "Chrome: Ctrl+t to Super+t",
+            "manipulators": [
+                {
+                    "from": { "key_code": "t",
+                        "modifiers": { "mandatory": [ "control" ] } },
+                    "to": [ { "key_code": "t",
+                        "modifiers": [ "left_gui" ] } ],
+                    "type": "basic"
+                }
+            ]
+        },
+        {
+            "description": "Chrome: Ctrl+l to Super+l",
+            "manipulators": [
+                {
+                    "from": { "key_code": "l",
+                        "modifiers": { "mandatory": [ "control" ] } },
+                    "to": [ { "key_code": "l",
+                        "modifiers": [ "left_gui" ] } ],
+                    "type": "basic"
+                }
+            ]
+        }
+    ]
+}

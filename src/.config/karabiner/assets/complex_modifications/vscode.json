@@ -1,0 +1,64 @@
+{
+    "title": "VScode shortcuts like windows",
+    "conditions": [
+        {
+          "type": "frontmost_application_if",
+          "bundle_identifiers": [
+            "^com\\.microsoft\\.VSCode"
+          ]
+        }
+    ],
+    "rules": [
+        {
+            "description": "VScode: Ctrl+slash to Command+slash",
+            "manipulators": [
+                {
+                    "from": { "key_code": "slash",
+                        "modifiers": { "mandatory": [ "control" ] } },
+                    "to": [ { "key_code": "slash",
+                        "modifiers": [ "left_gui"] } ],
+                    "type": "basic"
+                },
+                {
+                    "from": { "key_code": "slash",
+                        "modifiers": { "mandatory": [ "command" ] } },
+                    "type": "basic"
+                }
+            ]
+        },
+        {
+            "description": "VScode: Ctrl+o to Command+o",
+            "manipulators": [
+                {
+                    "from": { "key_code": "o",
+                        "modifiers": { "mandatory": [ "control" ] } },
+                    "to": [ { "key_code": "o",
+                        "modifiers": [ "left_gui"] } ],
+                    "type": "basic"
+                },
+                {
+                    "from": { "key_code": "o",
+                        "modifiers": { "mandatory": [ "command" ] } },
+                    "type": "basic"
+                }
+            ]
+        },
+        {
+            "description": "VScode: Ctrl+b to Command+b",
+            "manipulators": [
+                {
+                    "from": { "key_code": "b",
+                        "modifiers": { "mandatory": [ "control" ] } },
+                    "to": [ { "key_code": "b",
+                        "modifiers": [ "left_gui"] } ],
+                    "type": "basic"
+                },
+                {
+                    "from": { "key_code": "b",
+                        "modifiers": { "mandatory": [ "command" ] } },
+                    "type": "basic"
+                }
+            ]
+        }
+    ]
+}

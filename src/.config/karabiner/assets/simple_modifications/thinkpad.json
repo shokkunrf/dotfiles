@@ -1,0 +1,35 @@
+{
+    "title": "thinkpad keyboard",
+    "rules": [
+        {
+            "description": "Change print_screen to right_command",
+            "manipulators": [
+                {
+                    "type": "basic",
+                    "from": { "key_code": "print_screen" },
+                    "to": [ { "key_code": "right_command" } ]
+                }
+            ]
+        },
+        {
+            "description": "Change caps_lock to F13",
+            "manipulators": [
+                {
+                    "type": "basic",
+                    "from": { "key_code": "caps_lock" },
+                    "to": [ { "key_code": "f13" } ]
+                }
+            ]
+        },
+        {
+            "description": "Change right_alt to F16",
+            "manipulators": [
+                {
+                    "type": "basic",
+                    "from": { "key_code": "right_alt" },
+                    "to": [ { "key_code": "f16" } ]
+                }
+            ]
+        }
+    ]
+}

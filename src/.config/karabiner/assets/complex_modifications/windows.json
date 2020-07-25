@@ -1,0 +1,135 @@
+{
+    "title": "shortcut like windows",
+    "rules": [
+        {
+            "description": "Windows: Change F13 to Ctrl+Space",
+            "manipulators": [
+                {
+                    "from": { "key_code": "f13" },
+                    "to": [ { "key_code": "spacebar",
+                            "modifiers": [ "left_control" ] } ],
+                    "type": "basic"
+                }
+            ]
+        },
+        {
+            "description": "Windows: Change Ctrl+Shift+C to control+C",
+            "manipulators": [
+                {
+                    "from": { "key_code": "c",
+                        "modifiers": { "mandatory": [
+                                "left_control", "left_shift" ] } },
+                    "to": [ { "key_code": "c",
+                            "modifiers": [ "left_control" ] } ],
+                    "type": "basic"
+                }
+            ]
+        },
+        {
+            "description": "Windows: Change Ctrl+Y to Ctrl+Shift+Z",
+            "manipulators": [
+                {
+                    "from": { "key_code": "y",
+                        "modifiers": { "mandatory": [ "left_control" ] } },
+                    "to": [ { "key_code": "z",
+                            "modifiers": [
+                                "left_gui", "left_shift" ] } ],
+                    "type": "basic"
+                }
+            ]
+        },
+        {
+            "description": "Windows: Change Ctrl+C,V,X,Z,N,F,A,S,W to Command+C,V,X,Z,N,F,A,S,W",
+            "manipulators": [
+                {
+                    "from": { "key_code": "c",
+                        "modifiers": { "mandatory": [ "left_control" ] } },
+                    "to": [ { "key_code": "c",
+                        "modifiers": [ "left_gui" ] } ],
+                    "type": "basic"
+                },
+                {
+                    "from": { "key_code": "v",
+                        "modifiers": { "mandatory": [ "left_control" ] } },
+                    "to": [ { "key_code": "v",
+                        "modifiers": [ "left_gui" ] } ],
+                    "type": "basic"
+                },
+                {
+                    "from": { "key_code": "x",
+                        "modifiers": { "mandatory": [ "left_control" ] } },
+                    "to": [ { "key_code": "x",
+                        "modifiers": [ "left_gui" ] } ],
+                    "type": "basic"
+                },
+                {
+                    "from": { "key_code": "z",
+                        "modifiers": { "mandatory": [ "left_control" ] } },
+                    "to": [ { "key_code": "z",
+                        "modifiers": [ "left_gui" ] } ],
+                    "type": "basic"
+                },
+                {
+                    "from": { "key_code": "n",
+                        "modifiers": { "mandatory": [ 
+                            "left_control" ], "optional": [ "any" ] } },
+                    "to": [ { "key_code": "n",
+                        "modifiers": [ "left_gui" ] } ],
+                    "type": "basic"
+                },
+                {
+                    "from": {
+                        "key_code": "s",
+                        "modifiers": { "mandatory": [ "left_control" ] } },
+                    "to": [ { "key_code": "s",
+                        "modifiers": [ "left_gui" ] } ],
+                    "type": "basic"
+                },
+                {
+                    "from": { "key_code": "f",
+                        "modifiers": { "mandatory": [ "left_control" ] } },
+                    "to": [ { "key_code": "f",
+                        "modifiers": [ "left_gui" ] } ],
+                    "type": "basic"
+                },
+                {
+                    "from": { "key_code": "a",
+                        "modifiers": { "mandatory": [ "left_control" ] } },
+                    "to": [ { "key_code": "a",
+                        "modifiers": [ "left_gui" ] } ],
+                    "type": "basic"
+                },
+                {
+                    "from": { "key_code": "w",
+                        "modifiers": { "mandatory": [ "left_control" ] } },
+                    "to": [ { "key_code": "w",
+                        "modifiers": [ "left_gui" ] } ],
+                    "type": "basic"
+                }
+            ]
+        },
+        {
+            "description": "Windows: Alt+Tab to Command+Tab",
+            "manipulators": [
+                {
+                    "from": { "key_code": "tab",
+                        "modifiers": { "mandatory": [ "option" ] } },
+                    "to": [ { "key_code": "tab",
+                        "modifiers": [ "command" ] } ],
+                    "type": "basic"
+                }
+            ]
+        },
+        {
+            "description": "Windows: Super+Tab to Mission Control",
+            "manipulators": [
+                {
+                    "from": { "key_code": "tab",
+                        "modifiers": { "mandatory": [ "command" ] } },
+                    "to": [ { "key_code": "mission_control" }],
+                    "type": "basic"
+                }
+            ]
+        }
+    ]
+}

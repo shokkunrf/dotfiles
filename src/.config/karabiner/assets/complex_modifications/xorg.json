@@ -1,0 +1,57 @@
+{
+    "title": "Xmonad",
+    "rules": [
+        {
+            "description": "Xmonad: Change Command+P to Command+Space",
+            "manipulators": [
+                {
+                    "from": { "key_code": "p",
+                        "modifiers": { "mandatory": [ "left_command" ] } },
+                    "to": [ { "key_code": "spacebar",
+                            "modifiers": [ "left_command" ] } ],
+                    "type": "basic"
+                },
+                {
+                    "from": { "key_code": "p",
+                        "modifiers": { "mandatory": [ "right_command" ] } },
+                    "to": [ { "key_code": "spacebar",
+                            "modifiers": [ "left_command" ] } ],
+                    "type": "basic"
+                }
+            ]
+        },
+        {
+            "description": "Xmonad: Change Command+PageUp,PageDown to Ctrl+left,right",
+            "manipulators": [
+                {
+                    "from": { "key_code": "page_up",
+                        "modifiers": { "mandatory": [ "left_command" ] } },
+                    "to": [ { "key_code": "left_arrow",
+                            "modifiers": [ "left_control" ] } ],
+                    "type": "basic"
+                },
+                {
+                    "from": { "key_code": "page_up",
+                        "modifiers": { "mandatory": [ "right_command" ] } },
+                    "to": [ { "key_code": "left_arrow",
+                            "modifiers": [ "left_control" ] } ],
+                    "type": "basic"
+                },
+                {
+                    "from": { "key_code": "page_down",
+                        "modifiers": { "mandatory": [ "left_command" ] } },
+                    "to": [ { "key_code": "right_arrow",
+                            "modifiers": [ "left_control" ] } ],
+                    "type": "basic"
+                },
+                {
+                    "from": { "key_code": "page_down",
+                        "modifiers": { "mandatory": [ "right_command" ] } },
+                    "to": [ { "key_code": "right_arrow",
+                            "modifiers": [ "left_control" ] } ],
+                    "type": "basic"
+                }
+            ]
+        }
+    ]
+}

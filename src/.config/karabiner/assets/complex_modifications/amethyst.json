@@ -1,0 +1,43 @@
+{
+    "title": "Amethyst like Xmonad",
+    "rules": [
+        {
+            "description": "Amethyst: Command＋Shift+Page_Up,Down to Ctrl+Alt+Shift+left,right_arrow",
+            "manipulators": [
+                {
+                    "from": { "key_code": "page_up", "modifiers": { "mandatory": [ 
+                        "left_gui", "left_shift" ] } },
+                    "to": [ { "key_code": "left_arrow", "modifiers": [
+                        "left_control", "left_alt", "left_shift" ] } ],
+                    "type": "basic"
+                },
+                {
+                    "from": { "key_code": "page_down", "modifiers": { "mandatory": [
+                        "left_gui", "left_shift" ] } },
+                    "to": [ { "key_code": "right_arrow", "modifiers": [
+                        "left_control", "left_alt", "left_shift" ] } ],
+                    "type": "basic"
+                }
+            ]
+        },
+        {
+            "description": "Amethyst: Command＋Shift+j,k to Ctrl+Alt+Shift+j,k",
+            "manipulators": [
+                {
+                    "from": { "key_code": "j", "modifiers": { "mandatory": [
+                        "left_gui", "left_shift" ] } },
+                    "to": [ { "key_code": "j", "modifiers": [
+                        "left_control", "left_alt", "left_shift" ] } ],
+                    "type": "basic"
+                },
+                {
+                    "from": { "key_code": "k", "modifiers": { "mandatory": [
+                        "left_gui", "left_shift" ] } },
+                    "to": [ { "key_code": "k", "modifiers": [
+                        "left_control", "left_alt", "left_shift" ] } ],
+                    "type": "basic"
+                }
+            ]
+        }
+    ]
+}
