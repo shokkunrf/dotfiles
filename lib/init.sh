@@ -15,3 +15,6 @@ git config --global alias.ch checkout
 git config --global alias.ad add
 git config --global alias.cm commit
 git config --global alias.re reset
+
+chsh -s $(which zsh)
+
