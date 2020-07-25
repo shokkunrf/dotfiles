@@ -10,10 +10,11 @@ alias v="vagrant"
 alias d="docker"
 alias dc="docker-compose"
 
-ghq-peco(){
-  cd "$( ghq list -p | peco)"
+select-repository(){
+  dir="$(ls $HOME/Repositories | peco)"
+  cd $HOME/Repositories/$dir
 }
-alias sd="ghq-peco"
+alias sd="select-repository"
 
 cd-gopath(){
   dir="$(ls $GOPATH/src | peco)"
