@@ -1,4 +1,9 @@
-.xmonad/xmonad-x86_64-linux
-.xmonad/xmonad.errors
-.xmonad/xmonad.hi
-.xmonad/xmonad.o
+# .config
+src/.config/
+!src/.config/karabiner/assets/
+
+# .xmonad
+src/.xmonad/
+!src/.xmonad/xmonad.hs
+!src/.xmonad/.xmobarrc
+
