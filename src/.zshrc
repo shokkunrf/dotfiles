@@ -25,3 +25,8 @@ chpwd() {
   ls
 }
 
+# aliases
+if [ -f "$HOME/.zsh_aliases" ]; then
+  . $HOME/.zsh_aliases
+fi
+
