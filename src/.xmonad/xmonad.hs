@@ -24,7 +24,7 @@ import XMonad.Layout.IndependentScreens(countScreens)
 -- 
 -- variables
 --
-varTerm       = "urxvt"
+varTerm       = "qterminal"
 varModm       = mod4Mask -- Win key or Super_L
 varBar        = "xmobar ~/.xmonad/.xmobarrc"
 varWorkspaces = ["1","2","3","4","5"]

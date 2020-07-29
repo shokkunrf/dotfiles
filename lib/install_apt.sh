@@ -18,7 +18,9 @@ run_apt(){
 
   local readonly APT_PACKAGES=(
     # terminal
+    'xterm'
     'rxvt-unicode-256color'
+    'qterminal'
     # langage
     'fcitx-mozc'
     # GUI
