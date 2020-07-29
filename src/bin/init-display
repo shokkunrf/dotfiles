@@ -1,0 +1,11 @@
+#!/bin/sh
+## https://www.bioerrorlog.work/entry/change-resolution
+
+display='Virtual1'
+display_mode_fhd='FHD'
+xrandr --newmode $display_mode_fhd $(cvt 1920 1080 | tail -n 1 | cut -d ' ' -f 4-16)
+xrandr --addmode $display $display_mode_fhd
+display_mode_hd='HD'
+xrandr --newmode $display_mode_hd $(cvt 1280 720 | tail -n 1 | cut -d ' ' -f 4-16)
+xrandr --addmode $display $display_mode_hd
+
