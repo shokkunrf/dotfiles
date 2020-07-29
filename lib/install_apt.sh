@@ -23,6 +23,9 @@ run_apt(){
     'qterminal'
     # langage
     'fcitx-mozc'
+    # font
+    'fonts-noto-color-emoji'
+    'fonts-ipafont-mincho'
     # GUI
     'gnome'
     'xorg'
