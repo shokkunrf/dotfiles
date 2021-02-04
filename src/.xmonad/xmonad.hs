@@ -45,11 +45,10 @@ myStartupHook = do
 -- layout
 myLayoutHook = avoidStruts $ toggleLayouts (noBorders Full) $ myLayout
 myLayout = spacing widGap  $ gaps [(U,widEdge),(D,widEdge),(L,widEdge),(R,widEdge)]
-    $ first ||| second ||| third
+    $ first ||| second
         where
             first  = Tall 1 (1/100) (1/2)
             second = Full
-            third  = ThreeCol 1 (1/100) (1/2)
 
 -- new window will created in Float mode
 myManageHookFloat = composeAll
