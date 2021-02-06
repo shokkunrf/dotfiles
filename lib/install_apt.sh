@@ -17,6 +17,7 @@ install() {
     'feh'
     # tools
     'firefox-esr'
+    'vim'
     'peco'
     'jq'
     'zsh'
