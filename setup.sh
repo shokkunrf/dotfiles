@@ -2,9 +2,11 @@
 set -eu
 
 DOT_DIRECTORY=`dirname $0`
+LIB_DIRECTORY=$DOT_DIRECTORY/lib
+SRC_DIRECTORY=$DOT_DIRECTORY/src
 
 setup(){
-  bash "${DOT_DIRECTORY}/lib/deploy.sh"
+  bash $LIB_DIRECTORY/deploy.sh $SRC_DIRECTORY
 
   case "${OSTYPE}" in
     linux-gnu)

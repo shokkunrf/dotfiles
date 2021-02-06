@@ -1,7 +1,8 @@
 #!/usr/local/zsh
 # zsh aliases
-. $HOME/mixin/.shell_aliases
+if [ -f "$HOME/mixin/.shell_aliases" ]; then
+  . $HOME/mixin/.shell_aliases
+fi
 if [ -f "$HOME/mixin/.shell_aliases_$(cat /etc/issue | head -n 1 | cut -d ' ' -f 1)" ]; then
   . $HOME/mixin/.shell_aliases_$(cat /etc/issue | head -n 1 | cut -d ' ' -f 1)
 fi
-

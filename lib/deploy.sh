@@ -1,33 +1,22 @@
 #!/bin/bash
-# 
-# Create symbolick link
 
-#########################
-# Create symbolick link
-# Globals:
-#   None
-# Arguments:
-#   DOT_DIRECTORY
-# Return:
-#   None
-#########################
-symbolink(){
-  local readonly DOT_DIRECTORY=`dirname $0`/..
-  local readonly LINK_LIST=(
-    '.profile'
-    '.bash_aliases'
-    '.bashrc'
-    '.Xmodmap'
-    '.Xresources'
-    '.vimrc'
+deploy() {
+  local readonly SRC_DIRECTORY=$1
+  local readonly FILES=(
     'bin'
+    '.config'
+    'mixin'
+    '.vimrc'
+    '.xinitrc'
+    '.Xmodmap'
     '.xmonad'
+    '.zprofile'
+    '.zsh_aliases'
+    '.zshrc'
   )
 
-  for file in "${LINK_LIST[@]}"; do
-    ln -s "${DOT_DIRECTORY}/${file}" "${HOME}/"
+  for file in "${FILES[@]}"; do
+    ln -s "$SRC_DIRECTORY/$file" "$HOME/"
   done
 }
-symbolink
-
-ln -s $HOME/.local/share/Trash/files $HOME/.Trash
+deploy $1
