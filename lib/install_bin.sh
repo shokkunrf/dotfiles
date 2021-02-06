@@ -1,48 +1,58 @@
 #!/bin/bash
-
-# peco
-# https://qiita.com/ngyuki/items/94a7e638655d9910971b
 set -eu
 
-latest=$(
-  curl -fsSI https://github.com/peco/peco/releases/latest |
-    tr -d '\r' |
-    awk -F'/' '/^Location:/{print $NF}'
-)
+ARGS=$@
 
-: ${latest:?}
+is_contained() {
+  return $(echo $ARGS | grep -sq $1)
+}
 
-mkdir -p $HOME/_bin
-
-curl -fsSL "https://github.com/peco/peco/releases/download/${latest}/peco_linux_amd64.tar.gz" |
-  tar -xz --to-stdout peco_linux_amd64/peco > $HOME/_bin/peco
-
-chmod +x $HOME/_bin/peco
-
-# anyenv
-git clone https://github.com/anyenv/anyenv ~/.anyenv
-anyenv install --init
-
-
-# docker-compose
-latest=$(
-  curl -fsSI https://github.com/docker/compose/releases/latest |
-    tr -d '\r' |
-    awk -F'/' '/^Location:/{print $NF}'
-)
-
-: ${latest:?}
-
-curl -L "https://github.com/docker/compose/releases/download/${latest}/docker-compose-$(uname -s)-$(uname -m)" -o ~/_bin/docker-compose
-
-chmod +x ~/_bin/docker-compose
-
-# haskell stack
-sudo bash -c 'curl -sSL https://get.haskellstack.org/ | bash'
-
-# krita
-wget -O ~/_bin/krita 'https://download.kde.org/stable/krita/4.2.3/krita-4.2.3-x86_64.appimage'
-chmod u+x krita
-
-# git-prompt
-wget -O ~/.git-prompt.sh 'https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh'
+install() {
+  if $(is_contained 'golang'); then
+    # install...
+  fi
+  if $(is_contained 'git-prompt'); then
+    wget -O ~/.git-prompt.sh 'https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh'
+  fi
+  if $(is_contained 'vbox-guest-addtion'); then
+    # install...
+  fi
+  if $(is_contained 'docker'); then
+    # docker engine
+    sudo apt -y install \
+      apt-transport-https \
+      ca-certificates \
+      curl \
+      gnupg-agent \
+      software-properties-common
+    curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
+    sudo apt update
+    sudo apt install -y \
+      docker-ce \
+      docker-ce-cli \
+      containerd.io
+    # docker-compose
+    tag=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/docker/compose/releases/latest \
+      | jq '.name')
+    sudo curl -L https://github.com/docker/compose/releases/download/$tag/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
+  fi
+  if $(is_contained 'chrome'); then
+    wget -O chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    sudo apt install -y ./chrome.deb
+    rm ./chrome.deb
+  fi
+  if $(is_contained 'vscode'); then
+    curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
+    sudo install -o root -g root -m 644 microsoft.gpg /etc/apt/trusted.gpg.d/
+    sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list'
+  fi
+  if $(is_contained 'nvidia-driver'); then
+    # install...
+  fi
+  if $(is_contained 'anyenv'); then
+    # install...
+  fi
+}
+install
