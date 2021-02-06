@@ -46,10 +46,13 @@ install() {
     sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list'
   fi
   if $(is_contained 'nvidia-driver'); then
-    # install...
-  fi
-  if $(is_contained 'anyenv'); then
-    # install...
+    # Install NvidiaGraphicsDrivers for Debian9
+    sudo bash -c "echo 'deb http://httpredir.debian.org/debian/ stretch main contrib non-free' >> /etc/apt/sources.list"
+
+    sudo apt update
+    sudo apt install linux-headers-$(uname -r|sed 's/[^-]*-[^-]*-//') nvidia-driver
+
+    echo "Please reboot"
   fi
 }
 install
