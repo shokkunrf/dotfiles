@@ -12,7 +12,7 @@ setup(){
     linux-gnu)
       bash $DOT_DIRECTORY/lib/install_apt.sh
       exec $SHELL -l
-      bash $DOT_DIRECTORY/lib/install_bin.sh 'golang' 'git-prompt'
+      bash $DOT_DIRECTORY/lib/install_bin.sh 'git-prompt'
       bash $DOT_DIRECTORY/lib/install_goget.sh
       ;;
     *)
