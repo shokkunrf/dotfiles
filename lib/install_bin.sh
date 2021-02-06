@@ -9,7 +9,8 @@ is_contained() {
 
 install() {
   if $(is_contained 'golang'); then
-    # install...
+    wget https://golang.org/dl/go1.15.8.linux-amd64.tar.gz
+    tar -C /usr/local -xzf go1.15.8.linux-amd64.tar.gz
   fi
   if $(is_contained 'git-prompt'); then
     wget -O ~/.git-prompt.sh 'https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh'
