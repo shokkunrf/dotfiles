@@ -12,7 +12,9 @@ install() {
     wget -O ~/.git-prompt.sh 'https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh'
   fi
   if $(is_contained 'vbox-guest-addtion'); then
-    # install...
+    sudo apt install -y linux-headers-amd64
+    sudo mount /dev/sr0 /media/cdrom
+    sudo bash /media/cdrom0/VBoxLinuxAdditions.run
   fi
   if $(is_contained 'docker'); then
     # docker engine
