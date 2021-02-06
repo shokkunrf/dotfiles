@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eu
 
-DOT_DIRECTORY=`dirname $0`
+DOT_DIRECTORY="$(cd $(dirname $0) && pwd)"
 LIB_DIRECTORY=$DOT_DIRECTORY/lib
 SRC_DIRECTORY=$DOT_DIRECTORY/src
 
