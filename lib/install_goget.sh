@@ -2,7 +2,7 @@
 
 install_golang(){
   wget -O golang.tar.gz https://golang.org/dl/go1.15.8.linux-amd64.tar.gz
-  tar -C /usr/local -xzf golang.tar.gz
+  sudo tar -C /usr/local -xzf golang.tar.gz
   rm golang.tar.gz
 }
 
