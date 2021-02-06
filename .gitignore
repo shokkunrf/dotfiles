@@ -1,7 +1,6 @@
 # .config
 src/.config/*
 !src/.config/karabiner/assets/
-!src/.config/nixpkgs/
 
 # .xmonad
 src/.xmonad/*
