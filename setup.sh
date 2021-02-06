@@ -12,9 +12,7 @@ setup(){
     linux-gnu)
       . "${DOT_DIRECTORY}/lib/install_apt.sh"
       exec $SHELL -l
-      . "${DOT_DIRECTORY}/lib/install_snap.sh"
       . "${DOT_DIRECTORY}/lib/install_goget.sh"
-      . "${DOT_DIRECTORY}/lib/install_pip3.sh"
       . "${DOT_DIRECTORY}/lib/install_bin.sh"
       ;;
     *)
