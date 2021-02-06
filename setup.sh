@@ -11,7 +11,6 @@ setup(){
   case $OSTYPE in
     linux-gnu)
       bash $DOT_DIRECTORY/lib/install_apt.sh
-      exec $SHELL -l
       bash $DOT_DIRECTORY/lib/install_bin.sh 'git-prompt'
       bash $DOT_DIRECTORY/lib/install_goget.sh
       ;;
@@ -22,5 +21,6 @@ setup(){
   esac
 
   bash $DOT_DIRECTORY/lib/init.sh
-} >/dev/null
+  echo 'Finished setup'
+}
 setup
