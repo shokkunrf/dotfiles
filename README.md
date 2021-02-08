@@ -18,7 +18,7 @@ visudo
 # user
 sudo apt install git
 mkdir -p $HOME/Repositories
-git clone https://github.com/shokkunrf/dotfiles.git $HOME/dotfiles
+git clone https://github.com/shokkunrf/dotfiles.git $HOME/Repositories/dotfiles
 cd $HOME/Repositories/dotfiles
 bash setup.sh
 ```
