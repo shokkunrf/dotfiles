@@ -4,9 +4,11 @@ set -eu
 DOT_DIRECTORY="$(cd $(dirname $0) && pwd)"
 LIB_DIRECTORY=$DOT_DIRECTORY/lib
 SRC_DIRECTORY=$DOT_DIRECTORY/src
+ROOT_SRC_DIRECTORY=$DOT_DIRECTORY/root
 
 setup(){
   bash $LIB_DIRECTORY/deploy.sh $SRC_DIRECTORY
+  bash $LIB_DIRECTORY/deploy.sh $ROOT_SRC_DIRECTORY
 
   case $OSTYPE in
     linux-gnu)
