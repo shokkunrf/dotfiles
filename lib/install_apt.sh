@@ -5,6 +5,7 @@ install() {
     # terminal
     'xterm'
     'qterminal'
+    'adwaita-qt'
     # font
     'fonts-noto-color-emoji'
     'fonts-ipafont-mincho'

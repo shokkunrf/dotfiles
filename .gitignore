@@ -1,6 +1,7 @@
 # .config
 src/.config/*
 !src/.config/karabiner/assets/
+!src/.config/qterminal.org
 
 # .xmonad
 src/.xmonad/*
