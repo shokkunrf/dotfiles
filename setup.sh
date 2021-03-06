@@ -8,7 +8,7 @@ ROOT_SRC_DIRECTORY=$DOT_DIRECTORY/root
 
 setup(){
   bash $LIB_DIRECTORY/deploy.sh $SRC_DIRECTORY
-  bash $LIB_DIRECTORY/deploy.sh $ROOT_SRC_DIRECTORY
+  # bash $LIB_DIRECTORY/deploy.sh $ROOT_SRC_DIRECTORY
 
   case $OSTYPE in
     linux-gnu)
