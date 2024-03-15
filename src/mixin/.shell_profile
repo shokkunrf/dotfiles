@@ -1,4 +1,0 @@
-#!/bin/sh
-# git-prompt.sh
-. ~/.git-prompt.sh
-

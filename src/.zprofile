@@ -1,8 +1,8 @@
 #!/bin/zsh
 # zsh profile
 
-# mixin
-. $HOME/mixin/.shell_profile
+# git-prompt.sh
+. ~/.git-prompt.sh
 
 # zsh
 if [ -n "$ZSH_VERSION" ]; then
