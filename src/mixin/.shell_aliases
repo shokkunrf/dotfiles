@@ -7,7 +7,7 @@ alias open="xdg-open"
 alias g="git"
 alias v="vagrant"
 alias d="docker"
-alias dc="docker-compose"
+alias dc="docker compose"
 alias di="docker images | sed -e '1d' | sort -h -r"
 
 select-repository(){

@@ -18,5 +18,8 @@ deploy() {
   for file in "${FILES[@]}"; do
     ln -s "$SRC_DIRECTORY/$file" "$HOME/"
   done
+
+ln -sf ~/Repositories/dotfiles/src/.config/Code/User/keybindings_mac.json  ~/Library/Application\ Support/Code/User/keybindings.json
+ln -sf ~/Repositories/dotfiles/src/.config/Code/User/settings.json  ~/Library/Application\ Support/Code/User/settings.json
 }
 deploy $1

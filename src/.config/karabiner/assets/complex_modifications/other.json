@@ -69,58 +69,6 @@
                     "type": "basic"
                 }
             ]
-        },
-        {
-            "description": "Change Super alone to mission_control",
-            "manipulators": [
-                {
-                    "from": {
-                        "key_code": "left_command"
-                    },
-                    "to": [
-                        {
-                            "key_code": "left_command",
-                            "lazy": true
-                        }
-                    ],
-                    "to_if_alone": [
-                        {
-                            "key_code": "mission_control"
-                        }
-                    ],
-                    "type": "basic"
-                },
-                {
-                    "from": {
-                        "key_code": "right_command"
-                    },
-                    "to": [
-                        {
-                            "key_code": "right_command",
-                            "lazy": true
-                        }
-                    ],
-                    "to_if_alone": [
-                        {
-                            "key_code": "mission_control"
-                        }
-                    ],
-                    "type": "basic"
-                }
-            ]
-        },
-        {
-            "description": "Change Super+Shift to mission_control",
-            "manipulators": [
-                {
-                    "from": { "key_code": "left_command",
-                        "modifiers": { "mandatory": [ 
-                            "left_shift" ] } },
-                    "to": [{ "key_code": "mission_control"} ],
-                    "type": "basic"
-                }
-            ]
         }
-
     ]
 }

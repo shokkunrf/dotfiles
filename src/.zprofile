@@ -19,3 +19,5 @@ export PATH=$PATH:$HOME/.local/bin
 export PATH=$PATH:$HOME/bin
 export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 export PATH=$PATH:/snap/bin
+
+eval "$(/opt/homebrew/bin/brew shellenv)"

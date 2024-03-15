@@ -1,5 +1,12 @@
 # .config
 src/.config/*
+!src/.config/Code/
+ src/.config/Code/*
+!src/.config/Code/User/
+ src/.config/Code/User/*
+!src/.config/Code/User/keybindings.json
+!src/.config/Code/User/keybindings_mac.json
+!src/.config/Code/User/settings.json
 !src/.config/karabiner/assets/
 !src/.config/qterminal.org
 

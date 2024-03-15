@@ -36,9 +36,3 @@ chpwd() {
   ls
   PROMPT=$myps1
 }
-
-# aliases
-if [ -f "$HOME/.zsh_aliases" ]; then
-  . $HOME/.zsh_aliases
-fi
-
