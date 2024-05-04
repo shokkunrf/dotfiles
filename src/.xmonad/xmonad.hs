@@ -151,7 +151,7 @@ addtionalBind =
     -- Gnome Control Center
     , ("<XF86Tools>" , spawn "gnome-control-center")
     -- Gnome Screen Shot
-    , ("<Print>" , spawn "gnome-screenshot")
+    , ("<Print>" , spawn "gnome-screenshot --area")
     ]
 
 --

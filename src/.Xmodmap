@@ -17,7 +17,9 @@ keycode 46 = l L Right NoSymbol
 ! Mode_switch+PageUp to Menu
 keycode 112 = Prior Prior Menu NoSymbol Prior 
 ! F12(XF86Explorer) to Print
-keycode 152 = Print Sys_Req Print Sys_Req
+!keycode 152 = Print Sys_Req Print Sys_Req
+! Insert to Print
+keycode 118 = Print Sys_Req
 
 add mod1 = Alt_L 
 add mod4 = Super_R
