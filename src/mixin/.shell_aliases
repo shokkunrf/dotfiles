@@ -31,7 +31,8 @@ history-grep(){
   if [ $# = 0 ]; then
     history
   else
-    history 1 | grep "$@"
+    a=$(history 1 | grep "$@" | peco)
+    echo $a
   fi
 }
 alias h="history-grep"
