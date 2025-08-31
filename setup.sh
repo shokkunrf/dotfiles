@@ -56,6 +56,8 @@ setup(){
           # audio
           'alsa-utils'
           'pavucontrol'
+          # backlight
+          'brightnessctl'
         )
         apt install -y ${APT_GUI_PACKAGES[@]}
 
