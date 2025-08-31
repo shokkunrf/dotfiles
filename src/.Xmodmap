@@ -5,23 +5,11 @@ clear mod1
 keycode 107 = Super_R
 ! Alt_L redefine Alt_L
 keycode 64 = Alt_L
-! Alt_R to Mode_switch
-keycode 108 = Mode_switch
-! CapsLock to Zenkaku_Hankaku
-keycode 66 = Zenkaku_Hankaku
-! hjkl  
-keycode 43 = h H Left NoSymbol
-keycode 44 = j J Down NoSymbol
-keycode 45 = k K Up NoSymbol
-keycode 46 = l L Right NoSymbol
-! Mode_switch+PageUp to Menu
-keycode 112 = Prior Prior Menu NoSymbol Prior 
-! F12(XF86Explorer) to Print
-!keycode 152 = Print Sys_Req Print Sys_Req
+! CapsLock to Mode_switch
+keycode 66 = Mode_switch
 ! Insert to Print
 keycode 118 = Print Sys_Req
 
 add mod1 = Alt_L 
 add mod4 = Super_R
 add mod5 = Mode_switch
-

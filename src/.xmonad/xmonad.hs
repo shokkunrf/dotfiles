@@ -74,8 +74,7 @@ wsPP = xmobarPP
     , ppSep             = " ::: "
     , ppWsSep           = " "
     , ppTitle           = xmobarColor "#41d85c" "" . shorten 50
-    , ppLayout          = xmobarColor "#41d85c" ""
-			. \layoutName -> (drop 9 layoutName)
+    , ppLayout          = xmobarColor "#41d85c" "" . \layoutName -> (drop 9 layoutName)
     , ppOrder           = \(ws:layout:title:_) -> [layout,ws,title]
     }
 
@@ -109,8 +108,8 @@ addtionalBind =
                  <+> windows W.shiftMaster)
     , ("M4-C-<R>"  , windows W.shiftMaster
                  <+> windows W.swapUp
-	         <+> sendMessage (IncMasterN (-1)))
-	 
+             <+> sendMessage (IncMasterN (-1)))
+
     -- Close the focused window
     , ("M4-S-q" , kill)
     -- Restart xmonad
@@ -162,7 +161,7 @@ main = do
     numScreens <- countScreens
     wsbars <- mapM xmobarScreen [0 .. (numScreens - 1)]
 
-    xmonad $ ewmh defaultConfig
+    xmonad $ ewmh def
         { terminal           = varTerm
         , modMask            = varModm
         , borderWidth        = widBorder
@@ -171,14 +170,13 @@ main = do
         , focusedBorderColor = colFocused
         , startupHook        = myStartupHook
         , manageHook         = manageDocks
-                           <+> manageHook defaultConfig
+                           <+> manageHook def
                            <+> myManageHookFloat
                            <+> myManageHookShift
         -- statusbar setting
         , logHook            = myLogHook wsbars
         -- any time Full mode, avoid xmobar area
         , layoutHook         = myLayoutHook
-        , handleEventHook    = fullscreenEventHook
         }
         `removeKeysP` removeBind
         `additionalKeysP` addtionalBind
