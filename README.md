@@ -1,26 +1,19 @@
 # dotfiles
 
-## Installation
+## setup
 
-```
-bash setup.sh
-```
-
-<details>
-<summary>details</summary>
-
-```
-su -
-# root
-apt installl sudo
-visudo
-
-# user
-sudo apt install git
-mkdir -p $HOME/Repositories
-git clone https://github.com/shokkunrf/dotfiles.git $HOME/Repositories/dotfiles
-cd $HOME/Repositories/dotfiles
-bash setup.sh
+```sh
+# CUI environment & devcontainer
+sudo ./setup.sh
+# GUI environment
+sudo ./setup.sh --with-gui
 ```
 
-</details>
+## deploy
+
+```sh
+# CUI environment & devcontainer
+./deploy.sh
+# GUI environment
+./deploy.sh --with-gui
+```
