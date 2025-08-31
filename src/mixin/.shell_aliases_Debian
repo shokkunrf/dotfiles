@@ -1,6 +1,0 @@
-#!/bin/sh
-#
-alias upd="apt update && apt list --upgradable"
-alias upg="apt upgrade"
-alias ins="apt install"
-

@@ -1,13 +1,14 @@
 # !/bin/sh
-#
+
 alias sudo="sudo "
-alias ll="ls -l"
+alias ls='ls --color=auto'
 alias la="ls -la"
+alias grep='grep --color=auto'
 alias open="xdg-open"
 alias g="git"
 alias v="vagrant"
 alias d="docker"
-alias dc="docker-compose"
+alias dc="docker compose"
 alias di="docker images | sed -e '1d' | sort -h -r"
 
 select-repository(){
@@ -16,12 +17,6 @@ select-repository(){
 }
 alias sd="select-repository"
 
-cd-gopath(){
-  dir="$(ls $GOPATH/src | peco)"
-  cd "$GOPATH/src/$dir"
-}
-alias gd="cd-gopath"
-
 re-login(){
   exec $SHELL -l
 }
@@ -29,10 +24,20 @@ alias lo="re-login"
 
 history-grep(){
   if [ $# = 0 ]; then
-    history
+    history 10
   else
-    a=$(history 1 | grep "$@" | peco)
+    a=$(history | grep "$@" | peco)
     echo $a
   fi
 }
 alias h="history-grep"
+
+case $OSTYPE in
+  linux-gnu)
+    alias upd="apt update && apt list --upgradable"
+    alias upg="apt upgrade"
+    alias ins="apt install"
+  ;;
+  *)
+  ;;
+esac
