@@ -7,7 +7,7 @@ is_contained() {
   return $(echo $ARGS | grep -sq $1)
 }
 
-install() {
+install_ex() {
   if $(is_contained 'docker'); then
     # https://docs.docker.com/engine/install/debian/#install-using-the-repository
     apt update
@@ -25,7 +25,7 @@ install() {
 
     if [ $SUDO_USER ]; then
       gpasswd -a $SUDO_USER docker
-    elif
+    else
       gpasswd -a $USER docker
     fi
   fi
@@ -35,9 +35,9 @@ install() {
     rm /tmp/chrome.deb
   fi
   if $(is_contained 'vscode'); then
-    curl -o /tmp/vscode.deb 'https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64'
-    apt install -y /tmp/vscode.deb
+    curl -L -o /tmp/vscode.deb 'https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64'
+    apt install -y gpg /tmp/vscode.deb
     rm /tmp/vscode.deb
   fi
 }
-install
+install_ex
