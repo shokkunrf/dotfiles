@@ -24,6 +24,7 @@ deploy(){
     'bin'
     '.bashrc'
     '.profile'
+    '.shrc'
     '.vimrc'
   )
   for file in ${CUI_FILES[@]} ; do

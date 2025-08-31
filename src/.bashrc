@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ -f $HOME/.shrc ]; then
+  . $HOME/.shrc
+fi
+
 shopt -s histappend
 HISTCONTROL=ignoredups
 HISTFILE=$HOME/.shell_history
@@ -38,10 +42,6 @@ chpwd() {
 }
 PS1=$(myps1)
 export PROMPT_COMMAND=chpwd
-
-if [ -f $HOME/.shrc ]; then
-    . $HOME/.shrc
-fi
 
 if ! shopt -oq posix; then
   if [ -f /usr/share/bash-completion/bash_completion ]; then
