@@ -12,7 +12,7 @@ alias dc="docker compose"
 alias di="docker images | sed -e '1d' | sort -h -r"
 
 select-repository(){
-  dir="$(ls $HOME/Repositories | peco)"
+  dir="$(ls $HOME/Repositories | fzf)"
   cd $HOME/Repositories/$dir
 }
 alias sd="select-repository"
@@ -26,8 +26,7 @@ history-grep(){
   if [ $# = 0 ]; then
     history 10
   else
-    a=$(history | grep "$@" | peco)
-    echo $a
+    history | grep "$@" | fzf | awk '{$1=""; print substr($0,2)}' | bash
   fi
 }
 alias h="history-grep"

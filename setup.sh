@@ -18,7 +18,7 @@ setup(){
     linux-gnu)
       local readonly APT_CUI_PACKAGES=(
         'vim'
-        'peco'
+        'fzf'
         'jq'
         'wget'
         'curl'
