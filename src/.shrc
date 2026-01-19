@@ -12,8 +12,13 @@ alias dc="docker compose"
 alias di="docker images | sed -e '1d' | sort -h -r"
 
 select-repository(){
-  dir="$(ls $HOME/Repositories | fzf)"
-  cd $HOME/Repositories/$dir
+  repos=$HOME/Repositories
+  dir="$(find $repos -maxdepth 2 -type d -printf '%P\n' \
+    | sed '/^$/d' \
+    | sort -fr \
+    | fzf)"
+
+  cd $repos/$dir
 }
 alias sd="select-repository"
 
