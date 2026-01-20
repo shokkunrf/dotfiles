@@ -23,6 +23,7 @@ deploy(){
 
   local readonly CUI_FILES=(
     'bin'
+    '.bash_profile'
     '.bashrc'
     '.profile'
     '.shrc'
