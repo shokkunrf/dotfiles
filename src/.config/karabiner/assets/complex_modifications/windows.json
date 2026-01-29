@@ -130,6 +130,23 @@
                     "type": "basic"
                 }
             ]
+        },
+        {
+            "description": "Windows: Home,End to Super+Left,Right",
+            "manipulators": [
+                {
+                    "from": { "key_code": "home" },
+                    "to": [ { "key_code": "left_arrow",
+                        "modifiers": [ "command" ] } ],
+                    "type": "basic"
+                },
+                {
+                    "from": { "key_code": "end" },
+                    "to": [ { "key_code": "right_arrow",
+                        "modifiers": [ "command" ] } ],
+                    "type": "basic"
+                }
+            ]
         }
     ]
 }

@@ -68,6 +68,10 @@ setup(){
         $LIB_DIRECTORY/install_ex.sh ${EX_GUI_PACKAGES[@]}
       fi
       ;;
+    Darwin)
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      brew bundle --file=$DOT_DIRECTORY/src/darwin/.Brewfile
+      ;;
     *)
       echo 'Only works on Debian!' >&2
       exit 1

@@ -2,7 +2,7 @@
     "title": "Amethyst like Xmonad",
     "rules": [
         {
-            "description": "Amethyst: Command＋Shift+Page_Up,Down to Ctrl+Alt+Shift+left,right_arrow",
+            "description": "Amethyst: Command+Shift+Page_Up,Down to Ctrl+Alt+Shift+left,right_arrow",
             "manipulators": [
                 {
                     "from": { "key_code": "page_up", "modifiers": { "mandatory": [ 
@@ -21,7 +21,7 @@
             ]
         },
         {
-            "description": "Amethyst: Command＋Shift+j,k to Ctrl+Alt+Shift+j,k",
+            "description": "Amethyst: Command+Shift+j,k to Ctrl+Alt+Shift+j,k",
             "manipulators": [
                 {
                     "from": { "key_code": "j", "modifiers": { "mandatory": [
@@ -35,6 +35,31 @@
                         "left_gui", "left_shift" ] } },
                     "to": [ { "key_code": "k", "modifiers": [
                         "left_control", "left_alt", "left_shift" ] } ],
+                    "type": "basic"
+                }
+            ]
+        },
+        {
+            "description": "Amethyst: Command+Space to Shift+Option+Space",
+            "manipulators": [
+                {
+                    "from": {
+                        "key_code": "spacebar",
+                        "modifiers": {
+                            "mandatory": [
+                                "left_command"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "spacebar",
+                            "modifiers": [
+                                "left_alt",
+                                "left_shift"
+                            ]
+                        }
+                    ],
                     "type": "basic"
                 }
             ]

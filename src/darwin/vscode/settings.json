@@ -1,0 +1,32 @@
+{
+  "workbench.colorTheme": "Default Dark Modern",
+  "editor.formatOnSave": true,
+  "eslint.run": "onSave",
+  "[typescript][typescriptreact][vue]": {
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "always"
+    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // "[vue]": {
+  //   "editor.defaultFormatter": "esbenp.prettier-vscode"
+  // },
+  "terminal.integrated.enableMultiLinePasteWarning": false,
+  "github.copilot.editor.enableAutoCompletions": true,
+  "go.toolsManagement.autoUpdate": true,
+  "[markdown]": {
+    "editor.formatOnSave": false
+  },
+  "workbench.editorAssociations": {
+    "*.svg": "default"
+  },
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.python",
+    "editor.formatOnType": true
+  },
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "workbench.secondarySideBar.defaultVisibility": "hidden",
+  "git.openRepositoryInParentFolders": "always",
+  "terminal.integrated.stickyScroll.enabled": false
+}

@@ -51,6 +51,7 @@ deploy(){
     Darwin)
       # Dockを自動的に隠す
       defaults write com.apple.dock autohide -bool false
+      defaults write com.apple.dock "autohide-delay" -float "10" && killall Dock
       # タップでクリックを許可
       defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -int 1
       # カーソルの移動速度を変更 (1-15)
@@ -59,6 +60,11 @@ deploy(){
       defaults write com.apple.finder AppleShowAllFile true
       # Finder: 拡張子表示
       defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+      # アルファベットの連続入力を有効にする
+      defaults write -g ApplePressAndHoldEnabled -bool false
+
+      ln -sf ~/Repositories/dotfiles/src/.config/Code/User/keybindings_mac.json  "~/Library/Application Support/Code/User/keybindings.json"
+      ln -sf ~/Repositories/dotfiles/src/.config/Code/User/settings.json  "~/Library/Application Support/Code/User/settings.json"
     ;;
     *)
     ;;
