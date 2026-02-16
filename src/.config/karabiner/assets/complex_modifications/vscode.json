@@ -17,11 +17,27 @@
                         "modifiers": { "mandatory": [ "control" ] } },
                     "to": [ { "key_code": "slash",
                         "modifiers": [ "left_gui"] } ],
+    "conditions": [
+        {
+          "type": "frontmost_application_if",
+          "bundle_identifiers": [
+            "^com\\.microsoft\\.VSCode"
+          ]
+        }
+    ],
                     "type": "basic"
                 },
                 {
                     "from": { "key_code": "slash",
                         "modifiers": { "mandatory": [ "command" ] } },
+    "conditions": [
+        {
+          "type": "frontmost_application_if",
+          "bundle_identifiers": [
+            "^com\\.microsoft\\.VSCode"
+          ]
+        }
+    ],
                     "type": "basic"
                 }
             ]
@@ -34,11 +50,27 @@
                         "modifiers": { "mandatory": [ "control" ] } },
                     "to": [ { "key_code": "o",
                         "modifiers": [ "left_gui"] } ],
+    "conditions": [
+        {
+          "type": "frontmost_application_if",
+          "bundle_identifiers": [
+            "^com\\.microsoft\\.VSCode"
+          ]
+        }
+    ],
                     "type": "basic"
                 },
                 {
                     "from": { "key_code": "o",
                         "modifiers": { "mandatory": [ "command" ] } },
+    "conditions": [
+        {
+          "type": "frontmost_application_if",
+          "bundle_identifiers": [
+            "^com\\.microsoft\\.VSCode"
+          ]
+        }
+    ],
                     "type": "basic"
                 }
             ]
@@ -51,11 +83,27 @@
                         "modifiers": { "mandatory": [ "control" ] } },
                     "to": [ { "key_code": "b",
                         "modifiers": [ "left_gui"] } ],
+    "conditions": [
+        {
+          "type": "frontmost_application_if",
+          "bundle_identifiers": [
+            "^com\\.microsoft\\.VSCode"
+          ]
+        }
+    ],
                     "type": "basic"
                 },
                 {
                     "from": { "key_code": "b",
                         "modifiers": { "mandatory": [ "command" ] } },
+    "conditions": [
+        {
+          "type": "frontmost_application_if",
+          "bundle_identifiers": [
+            "^com\\.microsoft\\.VSCode"
+          ]
+        }
+    ],
                     "type": "basic"
                 }
             ]

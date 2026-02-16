@@ -19,6 +19,14 @@
                         "modifiers": { "mandatory": [ "control" ] } },
                     "to": [ { "key_code": "f",
                         "modifiers": [ "left_gui", "left_alt" ] } ],
+    "conditions": [
+                {
+          "type": "frontmost_application_if",
+          "bundle_identifiers": [
+            "^com\\.google\\.Chrome"
+          ]
+        }
+    ],
                     "type": "basic"
                 }
             ]
@@ -31,6 +39,15 @@
                         "modifiers": { "mandatory": [ "left_alt" ] } },
                     "to": [ { "key_code": "open_bracket",
                         "modifiers": [ "left_gui" ] } ],
+                            "conditions": [
+                {
+          "type": "frontmost_application_if",
+          "bundle_identifiers": [
+            "^com\\.google\\.Chrome"
+          ]
+        }
+    ],
+
                     "type": "basic"
                 },
                 {
@@ -38,6 +55,15 @@
                         "modifiers": { "mandatory": [ "left_alt" ] } },
                     "to": [ { "key_code": "close_bracket",
                         "modifiers": [ "left_gui"] } ],
+                            "conditions": [
+                {
+          "type": "frontmost_application_if",
+          "bundle_identifiers": [
+            "^com\\.google\\.Chrome"
+          ]
+        }
+    ],
+
                     "type": "basic"
                 }
             ]
@@ -50,7 +76,16 @@
                         "control" ] } },
                     "to": [ { "key_code": "y", "modifiers": [
                         "left_gui" ] } ],
-                    "type": "basic"
+    "conditions": [
+                {
+          "type": "frontmost_application_if",
+          "bundle_identifiers": [
+            "^com\\.google\\.Chrome"
+          ]
+        }
+    ],
+
+                        "type": "basic"
                 }
             ]
         },
@@ -62,7 +97,16 @@
                         "modifiers": { "mandatory": [ "control" ], "optional": [ "any" ] } },
                     "to": [ { "key_code": "r",
                         "modifiers": [ "left_gui" ] } ],
-                    "type": "basic"
+    "conditions": [
+                {
+          "type": "frontmost_application_if",
+          "bundle_identifiers": [
+            "^com\\.google\\.Chrome"
+          ]
+        }
+    ],
+
+                        "type": "basic"
                 }
             ]
         },
@@ -74,7 +118,16 @@
                         "modifiers": { "mandatory": [ "control" ] } },
                     "to": [ { "key_code": "t",
                         "modifiers": [ "left_gui" ] } ],
-                    "type": "basic"
+    "conditions": [
+                {
+          "type": "frontmost_application_if",
+          "bundle_identifiers": [
+            "^com\\.google\\.Chrome"
+          ]
+        }
+    ],
+
+                        "type": "basic"
                 }
             ]
         },
@@ -86,6 +139,15 @@
                         "modifiers": { "mandatory": [ "control" ] } },
                     "to": [ { "key_code": "l",
                         "modifiers": [ "left_gui" ] } ],
+                            "conditions": [
+                {
+          "type": "frontmost_application_if",
+          "bundle_identifiers": [
+            "^com\\.google\\.Chrome"
+          ]
+        }
+    ],
+
                     "type": "basic"
                 }
             ]

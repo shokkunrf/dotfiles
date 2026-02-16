@@ -17,12 +17,27 @@
                         "modifiers": { "mandatory": [ "control" ] } },
                     "to": [ { "key_code": "return_or_enter",
                         "modifiers": [ "left_gui"] } ],
-                    "type": "basic"
+        "conditions": [
+        {
+          "type": "frontmost_application_if",
+          "bundle_identifiers": [
+            "^com\\.tinyspeck\\.slackmacgap"
+          ]
+        }
+    ],
+                        "type": "basic"
                 },
                 {
                     "from": { "key_code": "return_or_enter",
                         "modifiers": { "mandatory": [ "command" ] } },
-                    "type": "basic"
+    "conditions": [
+        {
+          "type": "frontmost_application_if",
+          "bundle_identifiers": [
+            "^com\\.tinyspeck\\.slackmacgap"
+          ]
+        }
+    ],                    "type": "basic"
                 }
             ]
         }
