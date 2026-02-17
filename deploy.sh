@@ -19,6 +19,7 @@ deploy(){
   git config --global alias.ch checkout
   git config --global alias.ad add
   git config --global alias.cm commit
+  git config --global alias.cp cherry-pick
   git config --global core.editor vim
 
   local readonly CUI_FILES=(
