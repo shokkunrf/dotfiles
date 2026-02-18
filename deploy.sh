@@ -51,7 +51,9 @@ deploy(){
     Darwin)
       # Dockを自動的に隠す
       defaults write com.apple.dock autohide -bool false
-      defaults write com.apple.dock "autohide-delay" -float "10" && killall Dock
+      defaults write com.apple.dock persistent-apps -array
+      defaults write com.apple.dock "autohide-delay" -float "10"
+      killall Dock
       # タップでクリックを許可
       defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -int 1
       # カーソルの移動速度を変更 (1-15)
