@@ -8,6 +8,9 @@ is_contained() {
 }
 
 install_ex() {
+  if $(is_contained 'wd'); then
+    curl -fsSL https://github.com/shokkunrf/wd/releases/latest/download/install.sh | sh
+  fi
   if $(is_contained 'docker'); then
     # https://docs.docker.com/engine/install/debian/#install-using-the-repository
     apt update

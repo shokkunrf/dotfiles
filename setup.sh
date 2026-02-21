@@ -29,6 +29,7 @@ setup(){
       apt install -y ${APT_CUI_PACKAGES[@]}
 
       local readonly EX_CUI_PACKAGES=(
+        'wd'
         'docker'
       )
       $LIB_DIRECTORY/install_ex.sh ${EX_CUI_PACKAGES[@]}

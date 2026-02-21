@@ -12,56 +12,13 @@ alias dc="docker compose"
 alias di="docker images | sed -e '1d' | sort -h -r"
 
 # git repository
-alias gwl="git worktree list"
-
-git-worktree-clone(){
-  url=$1
-  project=${url#*:}
-  project=${project%.git}
-
-  repos=$HOME/Repositories
-  default_branch=$(git ls-remote --symref $url HEAD \
-    | awk '/^ref:/ { sub("refs/heads/", "", $2); print $2 }')
-
-  mkdir -p $repos/$project
-  git clone $url $repos/$project/$default_branch
-}
-alias gwc="git-worktree-clone"
-
-git-worktree-add(){
-  branch="$1"
-  wt="wt-${branch##*/}"
-
-  git worktree add -b $branch "../$wt"
-}
-alias gwa="git-worktree-add"
-
-git-worktree-remove(){
-  target="$1"
-
-  if [[ "$target" == wt-* ]]; then
-    wt="$target"
-  else
-    wt="wt-${target##*/}"
-  fi
-
-  git worktree remove "../$wt"
-}
-alias gwr="git-worktree-remove"
+wds() { dir=$(wd list | fzf) && cd "${WD_ROOT:-$HOME/Repositories}/$dir"; }
+wda() { dir=$(wd add "$@") && cd "$dir"; }
 
 select-repository(){
   repos=$HOME/Repositories
-  project="$(find $repos -maxdepth 2 -type d -printf '%P\n' \
-    | sed '/^$/d' \
-    | sort -fr \
-    | fzf)"
-
-  if [ -z $project ]; then
-    cd $repos
-    return
-  fi
-  default_branch=$(ls $repos/$project | grep -v 'wt-' -m 1)
-  cd $repos/$project/$default_branch
+  project="$(ls $repos | fzf)"
+  cd $repos/$project
 }
 alias sd="select-repository"
 
