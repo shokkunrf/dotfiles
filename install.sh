@@ -76,15 +76,15 @@ run() {
   fi
 
   step 3/3 "設定の配置"
-  local before=$LINK_COUNT
+  local before=$((LINK_COUNT + SETTING_COUNT))
   user_deploy
   os_deploy
-  if [ "$LINK_COUNT" -eq "$before" ]; then
+  if [ $((LINK_COUNT + SETTING_COUNT)) -eq "$before" ]; then
     log "すべて配置済み"
   fi
 
-  summary "インストール $INSTALL_COUNT 件 / リンク $LINK_COUNT 件 / 退避 $BACKUP_COUNT 件"
-  if [ $((INSTALL_COUNT + LINK_COUNT)) -gt 0 ]; then
+  summary "インストール $INSTALL_COUNT 件 / リンク $LINK_COUNT 件 / 退避 $BACKUP_COUNT 件 / 設定変更 $SETTING_COUNT 件"
+  if [ $((INSTALL_COUNT + LINK_COUNT + SETTING_COUNT)) -gt 0 ]; then
     echo "設定を反映するにはシェルを再起動してください: exec \$SHELL -l"
   fi
 }

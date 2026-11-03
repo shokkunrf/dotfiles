@@ -35,6 +35,7 @@ summary() { printf '\n\033[1;32m完了\033[0m %s\n' "$*"; }
 
 REPORT=''       # [1/3] 確認 で表示する内容 (report で追加する)
 INSTALL_COUNT=0 # [2/3] でインストールする件数
+SETTING_COUNT=0 # 変更する設定の件数 (git、defaults)
 LINK_COUNT=0    # [3/3] で作ったリンクの件数
 BACKUP_COUNT=0  # [3/3] で退避したファイルの件数
 SUDO_REASON=''  # root 権限が必要な理由 (不要なら空)

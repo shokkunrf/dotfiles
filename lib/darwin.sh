@@ -55,24 +55,51 @@ brewfile_entries() {
 
 # --- defaults -------------------------------------------------------------
 
+# 値が違う場合だけ設定する: ensure_default <読み出した時の値> [-currentHost] <domain> <key> <型> <値>
+# 変更したドメインを DEFAULTS_CHANGED に記録する (反映のためにアプリを再起動する)
+DEFAULTS_CHANGED=''
+ensure_default() {
+  local expected="$1" host=''
+  shift
+  if [ "$1" = -currentHost ]; then
+    host=-currentHost
+    shift
+  fi
+  local domain="$1" key="$2" type="$3" value="$4"
+  # shellcheck disable=SC2086
+  if [ "$(defaults $host read "$domain" "$key" 2>/dev/null || true)" = "$expected" ]; then
+    return 0
+  fi
+  # shellcheck disable=SC2086
+  defaults $host write "$domain" "$key" "$type" "$value"
+  log "設定   $domain $key = $value"
+  SETTING_COUNT=$((SETTING_COUNT + 1))
+  DEFAULTS_CHANGED="$DEFAULTS_CHANGED $domain"
+}
+
 deploy_defaults() {
   # Dock: 自動的に隠し、表示までの遅延を長くする (実質的に非表示)
-  defaults write com.apple.dock autohide -bool true
-  defaults write com.apple.dock autohide-delay -float 10
+  ensure_default 1 com.apple.dock autohide -bool true
+  ensure_default 10 com.apple.dock autohide-delay -float 10
   # タップでクリックを許可
-  defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -int 1
-  defaults write com.apple.AppleMultitouchTrackpad Clicking -int 1
-  defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+  ensure_default 1 com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -int 1
+  ensure_default 1 com.apple.AppleMultitouchTrackpad Clicking -int 1
+  ensure_default 1 -currentHost NSGlobalDomain com.apple.mouse.tapBehavior -int 1
   # カーソルの移動速度を変更 (1-15)
-  defaults write NSGlobalDomain com.apple.trackpad.scaling -float 15
+  ensure_default 15 NSGlobalDomain com.apple.trackpad.scaling -float 15
   # Finder: 隠しファイル表示
-  defaults write com.apple.finder AppleShowAllFiles -bool true
+  ensure_default 1 com.apple.finder AppleShowAllFiles -bool true
   # Finder: 拡張子表示
-  defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+  ensure_default 1 NSGlobalDomain AppleShowAllExtensions -bool true
   # アルファベットの連続入力を有効にする
-  defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+  ensure_default 0 NSGlobalDomain ApplePressAndHoldEnabled -bool false
 
-  killall Dock Finder >/dev/null 2>&1 || true
+  case "$DEFAULTS_CHANGED" in
+    *com.apple.dock*) killall Dock >/dev/null 2>&1 || true ;;
+  esac
+  case "$DEFAULTS_CHANGED" in
+    *com.apple.finder* | *NSGlobalDomain*) killall Finder >/dev/null 2>&1 || true ;;
+  esac
 }
 
 # --- 各ステップ -----------------------------------------------------------

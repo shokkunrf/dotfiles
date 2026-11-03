@@ -78,18 +78,27 @@ link_list() {
 
 # --- git ------------------------------------------------------------------
 
+# 値が違う場合だけ設定する: ensure_git_config <key> <value>
+ensure_git_config() {
+  if [ "$(git config --global "$1" || true)" != "$2" ]; then
+    git config --global "$1" "$2"
+    log "設定   git $1 = $2"
+    SETTING_COUNT=$((SETTING_COUNT + 1))
+  fi
+}
+
 deploy_git() {
   if ! command -v git >/dev/null 2>&1; then
     warn "git が無いため git の設定をスキップします"
     return 0
   fi
-  git config --global alias.st status
-  git config --global alias.br branch
-  git config --global alias.ch checkout
-  git config --global alias.ad add
-  git config --global alias.cm commit
-  git config --global alias.cp cherry-pick
-  git config --global core.editor vim
+  ensure_git_config alias.st status
+  ensure_git_config alias.br branch
+  ensure_git_config alias.ch checkout
+  ensure_git_config alias.ad add
+  ensure_git_config alias.cm commit
+  ensure_git_config alias.cp cherry-pick
+  ensure_git_config core.editor vim
 }
 
 # --- 各ステップ -----------------------------------------------------------
