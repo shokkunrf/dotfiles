@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# 対話シェル以外では何もしない
+case $- in
+  *i*) ;;
+  *) return ;;
+esac
+
 if [ -f "$HOME/.shrc" ]; then
   # shellcheck source=src/.shrc
   . "$HOME/.shrc"
