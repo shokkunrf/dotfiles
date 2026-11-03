@@ -12,6 +12,7 @@ fcitx-mozc
 # xmonad
 xorg
 xmonad
+libghc-xmonad-contrib-dev  # xmonad.hs のコンパイルに必要
 xmobar
 dmenu
 feh
