@@ -7,6 +7,7 @@
 #   os_install   : [2/3] インストール (root 権限が必要なものがあれば事前に require_sudo が必要)
 #   os_deploy    : [3/3] 設定の配置   macOS 用のリンクと defaults の設定
 #   os_links     : リンクする一覧
+#   target_shell / current_login_shell : ログインシェル (lib/common.sh で使う)
 #
 # インストールするものの一覧は packages/Brewfile
 # 呼び出し側で DOT_DIRECTORY を設定し、lib/common.sh と lib/user.sh を source しておく
@@ -22,6 +23,19 @@ darwin/vscode/keybindings.json|Library/Application Support/Code/User/keybindings
 .config/karabiner/assets
 EOF
 }
+
+# Homebrew の場所 (インストール済みなら brew に聞く。Homebrew の新規インストールは Apple Silicon のみ対応)
+homebrew_prefix() {
+  if command -v brew >/dev/null 2>&1; then
+    brew --prefix
+  else
+    echo /opt/homebrew
+  fi
+}
+
+# macOS 標準の /bin/bash は 3.2 と古いため、Homebrew の bash (Brewfile で入れる) を使う
+target_shell() { echo "$(homebrew_prefix)/bin/bash"; }
+current_login_shell() { dscl . -read "/Users/$(id -un)" UserShell | awk '{ print $2 }'; }
 
 # --- Homebrew -------------------------------------------------------------
 

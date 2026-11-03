@@ -7,6 +7,7 @@
 #   os_install   : [2/3] インストール (事前に require_sudo が必要)
 #   os_deploy    : [3/3] 設定の配置   GUI 用のリンク
 #   os_links     : リンクする一覧
+#   target_shell / current_login_shell : ログインシェル (lib/common.sh で使う)
 #
 # インストールするものの一覧は packages/apt-cui.txt と packages/apt-gui.txt
 # 呼び出し側で DOT_DIRECTORY と WITH_GUI を設定し、lib/common.sh と lib/user.sh を source しておく
@@ -25,6 +26,9 @@ os_links() {
 EOF
   fi
 }
+
+target_shell() { echo /bin/bash; }
+current_login_shell() { getent passwd "$(id -un)" | cut -d: -f7; }
 
 # --- apt ------------------------------------------------------------------
 

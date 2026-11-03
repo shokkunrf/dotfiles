@@ -35,7 +35,7 @@ summary() { printf '\n\033[1;32m完了\033[0m %s\n' "$*"; }
 
 REPORT=''       # [1/3] 確認 で表示する内容 (report で追加する)
 INSTALL_COUNT=0 # [2/3] でインストールする件数
-SETTING_COUNT=0 # 変更する設定の件数 (git、defaults)
+SETTING_COUNT=0 # 変更する設定の件数 (ログインシェル、git、defaults)
 LINK_COUNT=0    # [3/3] で作ったリンクの件数
 BACKUP_COUNT=0  # [3/3] で退避したファイルの件数
 SUDO_REASON=''  # root 権限が必要な理由 (不要なら空)
@@ -135,4 +135,39 @@ make_tmpdir() {
 # 一覧ファイルを読む (# 以降と空行を除き、1 行に 1 つ出力する): read_list <file>
 read_list() {
   sed -e 's/#.*//' -e 's/[[:space:]]*$//' -e '/^[[:space:]]*$/d' "$1"
+}
+
+# --- ログインシェル -------------------------------------------------------
+# dotfiles は bash 用なので、ログインシェルを bash にする
+# どの bash にするか (target_shell) と、現在のログインシェル (current_login_shell) は
+# lib/debian.sh / lib/darwin.sh で定義する
+
+check_login_shell() {
+  local current want
+  current="$(current_login_shell)"
+  want="$(target_shell)"
+  if [ "$current" = "$want" ]; then
+    NEED_SHELL=false
+    report shell "$current"
+  else
+    NEED_SHELL=true
+    SETTING_COUNT=$((SETTING_COUNT + 1))
+    report shell "$current -> $want に変更"
+    add_sudo_reason "ログインシェルの変更"
+  fi
+}
+
+# root で実行すると chsh はパスワードを聞かない
+change_login_shell() {
+  local want output
+  want="$(target_shell)"
+  [ -x "$want" ] || die "$want が見つかりません"
+  if ! grep -qxF "$want" /etc/shells; then
+    echo "$want" | as_root tee -a /etc/shells >/dev/null
+  fi
+  # macOS の chsh は成功しても "Changing shell for ..." を出すので、失敗した時だけ表示する
+  if ! output="$(as_root chsh -s "$want" "$(id -un)" 2>&1)"; then
+    die "ログインシェルを $want に変更できませんでした: $output"
+  fi
+  log "ログインシェルを $want に変更しました (反映には再ログインが必要です)"
 }

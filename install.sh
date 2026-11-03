@@ -2,12 +2,12 @@
 #
 # 環境構築を行う (このリポジトリの唯一の入口)
 #
-#   [1/3] 確認         足りないパッケージを調べて表示する
-#   [2/3] インストール 足りないものをインストールする (無ければスキップ)
+#   [1/3] 確認         足りないパッケージとログインシェルを調べて表示する
+#   [2/3] インストール 足りないものをインストールし、ログインシェルを bash にする (無ければスキップ)
 #   [3/3] 設定の配置   dotfiles をリンクし、git / macOS の設定をする
 #
 # 処理は lib/ に、インストールするものの一覧は packages/ に、配置するファイルは src/ にある
-#   lib/common.sh  OS に依存しない道具 (表示、sudo など)
+#   lib/common.sh  OS に依存しない道具 (表示、sudo、ログインシェルなど)
 #   lib/user.sh    OS 共通でユーザ領域だけを変更する処理 (wd、リンク、git の設定。sudo を使わない)
 #   lib/debian.sh  Debian の処理 (apt / Docker / Chrome / VS Code、GUI 用のリンク)
 #   lib/darwin.sh  macOS の処理 (Homebrew、macOS 用のリンク、defaults)
@@ -68,18 +68,23 @@ run() {
     os_preflight
     os_check
     user_check
+    check_login_shell
     if [ -n "$SUDO_REASON" ]; then
       require_sudo "$SUDO_REASON"
     fi
 
     step 1/3 "確認"
     printf '%s' "$REPORT"
-    if [ "$INSTALL_COUNT" -eq 0 ]; then
+    if [ $((INSTALL_COUNT + SETTING_COUNT)) -eq 0 ]; then
       step 2/3 "インストール" "スキップ (すべてインストール済み)"
     else
       step 2/3 "インストール"
       os_install
       user_install
+      # macOS は Homebrew の bash を使うので、インストールの後に変更する
+      if $NEED_SHELL; then
+        change_login_shell
+      fi
     fi
   else
     step 1/3 "確認" "スキップ (--no-packages)"
@@ -97,7 +102,9 @@ run() {
   fi
 
   summary "インストール $INSTALL_COUNT 件 / リンク $LINK_COUNT 件 / 退避 $BACKUP_COUNT 件 / 設定変更 $SETTING_COUNT 件"
-  if [ $((INSTALL_COUNT + LINK_COUNT + SETTING_COUNT)) -gt 0 ]; then
+  if ${NEED_SHELL:-false}; then
+    echo "ログインシェルを変更したので、ログインし直してください"
+  elif [ $((INSTALL_COUNT + LINK_COUNT + SETTING_COUNT)) -gt 0 ]; then
     echo "設定を反映するにはシェルを再起動してください: exec \$SHELL -l"
   fi
 }
