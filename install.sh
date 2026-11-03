@@ -9,8 +9,8 @@
 #
 # 処理は lib/ に、インストールするものの一覧は packages/ に、配置するファイルは src/ にある
 #   lib/common.sh  OS に依存しない道具
-#   lib/user.sh    OS 共通でユーザ領域だけを変更する処理 (リンク、git の設定)
-#   lib/debian.sh  Debian の処理 (apt / Docker / Chrome / VS Code / wd、GUI 用のリンク)
+#   lib/user.sh    OS 共通でユーザ領域だけを変更する処理 (wd、リンク、git の設定)
+#   lib/debian.sh  Debian の処理 (apt / Docker / Chrome / VS Code、GUI 用のリンク)
 #   lib/darwin.sh  macOS の処理 (Homebrew、macOS 用のリンク、defaults)
 set -euo pipefail
 
@@ -49,6 +49,7 @@ run() {
 
   os_preflight
   os_install
+  user_install
   user_deploy
   os_deploy
 }

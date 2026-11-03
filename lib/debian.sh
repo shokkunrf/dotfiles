@@ -3,7 +3,7 @@
 # Debian の処理
 #
 #   os_preflight : 実行できる環境か
-#   os_install   : apt / Docker / Chrome / VS Code / wd のインストール
+#   os_install   : apt / Docker / Chrome / VS Code のインストール
 #   os_deploy    : GUI 用のリンク
 #   os_links     : リンクする一覧
 #
@@ -54,16 +54,6 @@ apt_install_specs() {
 
 # --- apt 以外から入れるもの -----------------------------------------------
 # supports_<名前>: この環境が対象か / install_<名前>
-
-install_wd() {
-  log "wd をインストールします"
-  local tmp
-  tmp="$(make_tmpdir)"
-  download https://github.com/shokkunrf/wd/releases/latest/download/install.sh "$tmp/install.sh"
-  # インストーラは書き込めない場合だけ自分で sudo する
-  WD_INSTALL_DIR=/usr/local/bin sh "$tmp/install.sh"
-  rm -rf "$tmp"
-}
 
 install_docker() {
   # https://docs.docker.com/engine/install/debian/#install-using-the-repository
@@ -144,7 +134,6 @@ os_install() {
   log "apt パッケージをインストールします"
   as_root apt-get update
   apt_install_specs "${specs[@]}"
-  install_wd
   install_docker
   if $WITH_GUI; then
     for package in chrome vscode; do

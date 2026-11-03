@@ -2,9 +2,10 @@
 #
 # OS 共通で、ユーザ領域だけを変更する処理 (sudo を一切使わない)
 #
-#   user_deploy : dotfiles のリンクと git の設定
-#   cui_links   : リンクする dotfiles の一覧
-#   link_list   : 一覧のとおりにリンクする (lib/debian.sh, lib/darwin.sh でも使う)
+#   user_install : wd を ~/.local/bin に入れる
+#   user_deploy  : dotfiles のリンクと git の設定
+#   cui_links    : リンクする dotfiles の一覧
+#   link_list    : 一覧のとおりにリンクする (lib/debian.sh, lib/darwin.sh でも使う)
 #
 # 呼び出し側で DOT_DIRECTORY を設定し、lib/common.sh を source しておく
 # macOS 標準の bash 3.2 でも動くように書くこと
@@ -22,6 +23,18 @@ bin
 .shrc
 .vimrc
 EOF
+}
+
+# --- wd -------------------------------------------------------------------
+
+install_wd() {
+  log "wd を ~/.local/bin にインストールします"
+  local tmp
+  tmp="$(make_tmpdir)"
+  download https://github.com/shokkunrf/wd/releases/latest/download/install.sh "$tmp/install.sh"
+  mkdir -p "$HOME/.local/bin"
+  WD_INSTALL_DIR="$HOME/.local/bin" sh "$tmp/install.sh"
+  rm -rf "$tmp"
 }
 
 # --- リンク ---------------------------------------------------------------
@@ -73,6 +86,10 @@ deploy_git() {
 }
 
 # --- 各ステップ -----------------------------------------------------------
+
+user_install() {
+  install_wd
+}
 
 user_deploy() {
   deploy_git
