@@ -1,7 +1,8 @@
 #!/bin/bash
 
-if [ -f $HOME/.shrc ]; then
-  . $HOME/.shrc
+if [ -f "$HOME/.shrc" ]; then
+  # shellcheck source=src/.shrc
+  . "$HOME/.shrc"
 fi
 
 shopt -s histappend
@@ -13,19 +14,15 @@ HISTFILESIZE=100000
 shopt -s checkwinsize
 shopt -s globstar
 
-case "$TERM" in
-    xterm-color|*-256color) color_prompt=yes;;
-esac
-
-BLACK="\e[30m"
 RED="\e[31m"
 GREEN="\e[32m"
 BOLD_BLUE="\e[1;34m"
 RESET="\e[0m"
 myps1() {
   local char_limit=3
-  local dir_path=$(pwd | sed "s@${HOME}@~@")
-  local short_path=$(echo $dir_path | sed "s@\(/[^/]\{$char_limit\}\)[^/]*@\1@g")
+  local dir_path short_path
+  dir_path=$(pwd | sed "s@${HOME}@~@")
+  short_path=$(echo "$dir_path" | sed "s@\(/[^/]\{$char_limit\}\)[^/]*@\1@g")
   echo "\[${BOLD_BLUE}\]${short_path}\[${GREEN}\]\$(__git_ps1 '(%s)') \[${RESET}\]\\$ "
 }
 chpwd() {
@@ -45,8 +42,10 @@ export PROMPT_COMMAND=chpwd
 
 if ! shopt -oq posix; then
   if [ -f /usr/share/bash-completion/bash_completion ]; then
+    # shellcheck source=/dev/null
     . /usr/share/bash-completion/bash_completion
   elif [ -f /etc/bash_completion ]; then
+    # shellcheck source=/dev/null
     . /etc/bash_completion
   fi
 fi
