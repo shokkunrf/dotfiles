@@ -54,6 +54,8 @@ deploy_defaults() {
   defaults write com.apple.dock autohide-delay -float 10
   # タップでクリックを許可
   defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -int 1
+  defaults write com.apple.AppleMultitouchTrackpad Clicking -int 1
+  defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
   # カーソルの移動速度を変更 (1-15)
   defaults write NSGlobalDomain com.apple.trackpad.scaling -float 15
   # Finder: 隠しファイル表示
