@@ -55,3 +55,23 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+# プロンプトで使う __git_ps1 (bash-completion が無い環境や macOS 向けに直接読み込む)
+if ! type __git_ps1 >/dev/null 2>&1; then
+  for git_prompt in \
+    /usr/lib/git-core/git-sh-prompt \
+    /opt/homebrew/etc/bash_completion.d/git-prompt.sh \
+    /usr/local/etc/bash_completion.d/git-prompt.sh \
+    /Library/Developer/CommandLineTools/usr/share/git-core/git-prompt.sh \
+    /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-prompt.sh; do
+    if [ -f "$git_prompt" ]; then
+      # shellcheck source=/dev/null
+      . "$git_prompt"
+      break
+    fi
+  done
+  unset git_prompt
+fi
+if ! type __git_ps1 >/dev/null 2>&1; then
+  __git_ps1() { :; }
+fi
