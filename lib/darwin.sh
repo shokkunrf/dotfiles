@@ -49,8 +49,8 @@ install_homebrew() {
 # --- defaults -------------------------------------------------------------
 
 deploy_defaults() {
-  # Dock: 表示までの遅延を長くする
-  defaults write com.apple.dock autohide -bool false
+  # Dock: 自動的に隠し、表示までの遅延を長くする (実質的に非表示)
+  defaults write com.apple.dock autohide -bool true
   defaults write com.apple.dock autohide-delay -float 10
   # タップでクリックを許可
   defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -int 1
