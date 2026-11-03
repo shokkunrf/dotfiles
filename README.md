@@ -13,7 +13,7 @@ sudo ./setup.sh --with-gui
 
 ```sh
 # CUI environment & devcontainer
-./deploy.sh
+./install.sh
 # GUI environment
-./deploy.sh --with-gui
+./install.sh --with-gui
 ```
