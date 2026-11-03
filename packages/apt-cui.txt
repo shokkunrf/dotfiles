@@ -6,6 +6,7 @@ fzf
 jq
 wget
 curl
+ca-certificates
 git
 sudo
 bash-completion
