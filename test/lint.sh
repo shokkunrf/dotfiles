@@ -5,7 +5,7 @@
 # usage: test/lint.sh [--fix]
 #   --fix  shfmt で書式を直す
 #
-# 必要なもの: shfmt, shellcheck, jq
+# 必要なもの: shfmt, shellcheck, actionlint, jq
 set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
@@ -32,6 +32,7 @@ fi
 run shfmt -d "${formatted[@]}"
 run shellcheck -x "${scripts[@]}"
 run shellcheck -x --severity=warning "${dotfiles[@]}"
+run actionlint
 for file in src/.config/karabiner/assets/*/*.json src/darwin/vscode/keybindings.json; do
   jq empty "$file" || {
     echo "invalid JSON: $file"

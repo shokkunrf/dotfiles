@@ -1,0 +1,156 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    # 外部から取得するもの (Docker, Chrome, VS Code, Homebrew など) の変化を検知する
+    - cron: '17 3 * * 1'
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    # 明示すると -eo pipefail で実行される
+    shell: bash
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    env:
+      SHFMT_VERSION: v3.14.1
+      ACTIONLINT_VERSION: 1.7.12
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install shfmt and actionlint
+        run: |
+          mkdir -p "$HOME/.local/bin"
+          curl -fsSL -o "$HOME/.local/bin/shfmt" "https://github.com/mvdan/sh/releases/download/$SHFMT_VERSION/shfmt_${SHFMT_VERSION}_linux_amd64"
+          chmod +x "$HOME/.local/bin/shfmt"
+          curl -fsSL "https://github.com/rhysd/actionlint/releases/download/v$ACTIONLINT_VERSION/actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz" |
+            tar -xz -C "$HOME/.local/bin" actionlint
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: test/lint.sh
+        run: test/lint.sh
+
+  debian:
+    name: debian ${{ matrix.debian }} ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    container: debian:${{ matrix.debian }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # ジョブはコンテナ内で動くので、ホストとして試す場合は --packages を付ける
+        include:
+          # ホスト (CUI / デスクトップ): 一般ユーザ + sudo で、リポジトリ内から ./install.sh を実行
+          - { debian: 13, name: cui, user: tester, sudo: true, mode: local, dir: /home/tester/dotfiles, args: --packages, verify: '' }
+          - { debian: 12, name: cui, user: tester, sudo: true, mode: local, dir: /home/tester/dotfiles, args: --packages, verify: '' }
+          - { debian: 13, name: gui, user: tester, sudo: true, mode: local, dir: /home/tester/dotfiles, args: --packages --with-gui, verify: --with-gui }
+          - { debian: 12, name: gui, user: tester, sudo: true, mode: local, dir: /home/tester/dotfiles, args: --packages --with-gui, verify: --with-gui }
+          # ホスト: root で、curl | bash と同じくパイプ経由で実行 (clone から行う)
+          - { debian: 13, name: bootstrap, user: root, sudo: false, mode: bootstrap, dir: /root/.dotfiles, args: --packages, verify: '' }
+          # devcontainer: sudo が無い一般ユーザで引数なしで実行し、コンテナと判定されて配置だけ行う
+          - { debian: 13, name: devcontainer, user: tester, sudo: false, mode: local, dir: /home/tester/dotfiles, args: '', verify: --no-packages }
+          # sudo が無い一般ユーザで、--no-packages を指定して配置だけ行う
+          - { debian: 13, name: no-packages, user: tester, sudo: false, mode: local, dir: /home/tester/dotfiles, args: --no-packages, verify: --no-packages }
+    env:
+      DOTFILES_REPO: ${{ github.event.pull_request.head.repo.clone_url || format('https://github.com/{0}.git', github.repository) }}
+      DOTFILES_BRANCH: ${{ github.head_ref || github.ref_name }}
+      TEST_USER: ${{ matrix.user }}
+      TEST_MODE: ${{ matrix.mode }}
+      TEST_DIR: ${{ matrix.dir }}
+      TEST_ARGS: ${{ matrix.args }}
+      VERIFY_ARGS: ${{ matrix.verify }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Prepare user
+        if: matrix.user != 'root'
+        run: |
+          # ログインシェルを bash に変更する処理も確認するため、sh で作る
+          useradd -m -s /bin/sh "$TEST_USER"
+          cp -r "$GITHUB_WORKSPACE" "$TEST_DIR"
+          chown -R "$TEST_USER:" "$TEST_DIR"
+          if [ '${{ matrix.sudo }}' = true ]; then
+            apt-get update
+            apt-get install -y sudo
+            echo "$TEST_USER ALL=(ALL) NOPASSWD:ALL" > "/etc/sudoers.d/$TEST_USER"
+          fi
+
+      - name: install.sh
+        run: |
+          if [ "$TEST_MODE" = bootstrap ]; then
+            runuser -l "$TEST_USER" -c "DOTFILES_REPO='$DOTFILES_REPO' DOTFILES_BRANCH='$DOTFILES_BRANCH' bash -s -- $TEST_ARGS" < install.sh
+          else
+            runuser -l "$TEST_USER" -c "$TEST_DIR/install.sh $TEST_ARGS"
+          fi
+
+      - name: install.sh (2nd run, idempotency / no sudo)
+        run: |
+          # インストール済みなら sudo を使わないことを確かめるため、sudo の権限を外してから実行する
+          rm -f "/etc/sudoers.d/$TEST_USER"
+          if [ "$TEST_MODE" = bootstrap ]; then
+            # 既に clone 済みのディレクトリを使うこと
+            runuser -l "$TEST_USER" -c "bash -s -- $TEST_ARGS" < install.sh | tee /tmp/install2.log
+          else
+            runuser -l "$TEST_USER" -c "$TEST_DIR/install.sh $TEST_ARGS" | tee /tmp/install2.log
+          fi
+          if ! grep -q 'インストール 0 件 / リンク 0 件 / 退避 0 件 / 設定変更 0 件' /tmp/install2.log; then
+            echo "::error::2回目の実行で何かが変更されました"
+            exit 1
+          fi
+
+      - name: Check container detection
+        if: matrix.name == 'devcontainer'
+        run: |
+          if ! grep -q 'コンテナ内のため' /tmp/install2.log; then
+            echo "::error::コンテナと判定されませんでした"
+            exit 1
+          fi
+
+      - name: verify
+        run: runuser -l "$TEST_USER" -c "$TEST_DIR/test/verify.sh $VERIFY_ARGS"
+
+  macos:
+    runs-on: macos-latest
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+      HOMEBREW_NO_INSTALL_CLEANUP: 1
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Check casks in Brewfile
+        run: |
+          # cask (GUI アプリ) は大きく CI で起動もできないため、存在確認だけしてインストールはスキップする
+          casks="$(awk -F'"' '/^cask /{print $2}' packages/Brewfile | xargs)"
+          status=0
+          for cask in $casks; do
+            if ! token="$(brew info --json=v2 --cask "$cask" | jq -r '.casks[0].token')"; then
+              echo "::error file=packages/Brewfile::cask '$cask' が見つかりません"
+              status=1
+            elif [ "$token" != "$cask" ]; then
+              echo "::warning file=packages/Brewfile::cask '$cask' は '$token' に名前が変わっています"
+            fi
+          done
+          echo "HOMEBREW_BUNDLE_CASK_SKIP=$casks" >> "$GITHUB_ENV"
+          exit "$status"
+
+      - name: install.sh
+        run: ./install.sh
+
+      - name: install.sh (2nd run, idempotency / no sudo)
+        run: |
+          ./install.sh | tee /tmp/install2.log
+          if ! grep -q 'インストール 0 件 / リンク 0 件 / 退避 0 件 / 設定変更 0 件' /tmp/install2.log; then
+            echo "::error::2回目の実行で何かが変更されました"
+            exit 1
+          fi
+
+      - name: verify
+        run: test/verify.sh
