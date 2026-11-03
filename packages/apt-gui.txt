@@ -24,5 +24,6 @@ dunst
 # audio
 alsa-utils
 pavucontrol
+pulseaudio-utils           # bin/set-volume の pactl
 # backlight
 brightnessctl
