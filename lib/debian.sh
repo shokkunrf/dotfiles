@@ -35,6 +35,23 @@ is_dpkg_installed() {
   [ "$(dpkg-query -W -f='${Status}' "$1" 2>/dev/null)" = 'install ok installed' ]
 }
 
+# 'a|b' をインストールできる最初のパッケージ名に置き換えてインストールする (apt-get update 後に呼ぶ)
+apt_install_specs() {
+  local packages=() spec candidate found
+  for spec in "$@"; do
+    found=''
+    for candidate in ${spec//|/ }; do
+      if apt-cache show "$candidate" >/dev/null 2>&1; then
+        found="$candidate"
+        break
+      fi
+    done
+    [ -n "$found" ] || die "インストールできるパッケージがありません: $spec"
+    packages+=("$found")
+  done
+  apt_install "${packages[@]}"
+}
+
 # --- apt 以外から入れるもの -----------------------------------------------
 # supports_<名前>: この環境が対象か / install_<名前>
 
@@ -126,7 +143,7 @@ os_install() {
 
   log "apt パッケージをインストールします"
   as_root apt-get update
-  apt_install "${specs[@]}"
+  apt_install_specs "${specs[@]}"
   install_wd
   install_docker
   if $WITH_GUI; then

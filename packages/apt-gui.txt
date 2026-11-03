@@ -4,17 +4,17 @@
 
 # terminal
 qterminal
-adwaita-qt
+adwaita-qt|adwaita-qt6
 # font
 fonts-noto-color-emoji
 fonts-ipafont-mincho
-fcitx-mozc
+fcitx-mozc|fcitx5-mozc
 # xmonad
 xorg
 xmonad
 libghc-xmonad-contrib-dev  # xmonad.hs のコンパイルに必要
 xmobar
-dmenu
+dmenu|suckless-tools       # Debian では suckless-tools が dmenu を提供する
 feh
 # input
 xinput
