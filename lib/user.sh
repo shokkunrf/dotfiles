@@ -2,6 +2,7 @@
 #
 # OS 共通で、ユーザ領域だけを変更する処理 (sudo を一切使わない)
 #
+#   user_check   : wd のインストールが必要か調べる (何も表示しない)
 #   user_install : wd を ~/.local/bin に入れる
 #   user_deploy  : dotfiles のリンクと git の設定
 #   cui_links    : リンクする dotfiles の一覧
@@ -26,6 +27,10 @@ EOF
 }
 
 # --- wd -------------------------------------------------------------------
+
+needs_wd() {
+  ! command -v wd >/dev/null 2>&1 && [ ! -x "$HOME/.local/bin/wd" ]
+}
 
 install_wd() {
   log "wd を ~/.local/bin にインストールします"
@@ -87,8 +92,19 @@ deploy_git() {
 
 # --- 各ステップ -----------------------------------------------------------
 
+user_check() {
+  if needs_wd; then
+    NEED_WD=true
+    INSTALL_COUNT=$((INSTALL_COUNT + 1))
+  else
+    NEED_WD=false
+  fi
+}
+
 user_install() {
-  install_wd
+  if $NEED_WD; then
+    install_wd
+  fi
 }
 
 user_deploy() {

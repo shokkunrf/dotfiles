@@ -3,7 +3,8 @@
 # Debian の処理
 #
 #   os_preflight : 実行できる環境か
-#   os_install   : apt / Docker / Chrome / VS Code のインストール
+#   os_check     : インストールが必要なものを調べる (何も表示せず、sudo も使わない)
+#   os_install   : apt / Docker / Chrome / VS Code のうち、足りないものをインストール
 #   os_deploy    : GUI 用のリンク
 #   os_links     : リンクする一覧
 #
@@ -35,6 +36,17 @@ is_dpkg_installed() {
   [ "$(dpkg-query -W -f='${Status}' "$1" 2>/dev/null)" = 'install ok installed' ]
 }
 
+# 'a|b' のどれかがインストール済みか
+is_apt_spec_installed() {
+  local candidate
+  for candidate in ${1//|/ }; do
+    if is_dpkg_installed "$candidate"; then
+      return 0
+    fi
+  done
+  return 1
+}
+
 # 'a|b' をインストールできる最初のパッケージ名に置き換えてインストールする (apt-get update 後に呼ぶ)
 apt_install_specs() {
   local packages=() spec candidate found
@@ -53,7 +65,15 @@ apt_install_specs() {
 }
 
 # --- apt 以外から入れるもの -----------------------------------------------
-# supports_<名前>: この環境が対象か / install_<名前>
+# supports_<名前>: この環境が対象か / needs_<名前>: インストールが必要か / install_<名前>
+
+supports_docker() { true; }
+needs_docker() {
+  is_dpkg_installed docker-ce || return 0
+  is_root && return 1
+  # 追加した直後は、ログインし直すまで今のセッションに反映されないので、グループの設定を見る
+  ! grep -qx docker <<<"$(id -nG "$(id -un)" | tr ' ' '\n')"
+}
 
 install_docker() {
   # https://docs.docker.com/engine/install/debian/#install-using-the-repository
@@ -86,6 +106,7 @@ install_docker() {
 }
 
 supports_chrome() { [ "$(dpkg --print-architecture)" = amd64 ]; }
+needs_chrome() { ! is_dpkg_installed google-chrome-stable; }
 
 install_chrome() {
   log "Google Chrome をインストールします"
@@ -106,6 +127,7 @@ vscode_os() {
 }
 
 supports_vscode() { vscode_os >/dev/null; }
+needs_vscode() { ! is_dpkg_installed code; }
 
 install_vscode() {
   log "VS Code をインストールします"
@@ -120,8 +142,8 @@ install_vscode() {
 
 os_preflight() { :; }
 
-os_install() {
-  local specs=() spec package
+os_check() {
+  local specs=() packages=(docker) spec package
   while IFS= read -r spec; do
     specs+=("$spec")
   done < <(
@@ -130,20 +152,40 @@ os_install() {
       read_list "$APT_GUI_LIST"
     fi
   )
-
-  log "apt パッケージをインストールします"
-  as_root apt-get update
-  apt_install_specs "${specs[@]}"
-  install_docker
   if $WITH_GUI; then
-    for package in chrome vscode; do
-      if "supports_$package"; then
-        "install_$package"
-      else
-        warn "$package は $(dpkg --print-architecture) に対応していないためスキップします"
-      fi
-    done
+    packages+=(chrome vscode)
   fi
+
+  MISSING_APT=()
+  for spec in "${specs[@]}"; do
+    if ! is_apt_spec_installed "$spec"; then
+      MISSING_APT+=("$spec")
+    fi
+  done
+
+  MISSING_OTHERS=()
+  for package in "${packages[@]}"; do
+    if "supports_$package" && "needs_$package"; then
+      MISSING_OTHERS+=("$package")
+    fi
+  done
+
+  INSTALL_COUNT=$((INSTALL_COUNT + ${#MISSING_APT[@]} + ${#MISSING_OTHERS[@]}))
+}
+
+os_install() {
+  local package
+  # Chrome / VS Code の .deb の依存関係の解決にも使うので、apt で何か入れる場合は先に更新する
+  if [ $((${#MISSING_APT[@]} + ${#MISSING_OTHERS[@]})) -gt 0 ]; then
+    as_root apt-get update
+  fi
+  if [ ${#MISSING_APT[@]} -gt 0 ]; then
+    log "apt パッケージをインストールします"
+    apt_install_specs "${MISSING_APT[@]}"
+  fi
+  for package in ${MISSING_OTHERS[@]+"${MISSING_OTHERS[@]}"}; do
+    "install_$package"
+  done
 }
 
 os_deploy() {

@@ -5,7 +5,7 @@
 # usage: ./install.sh [--with-gui]
 #   --with-gui  GUI 環境用のパッケージ・設定も入れる (Debian のみ)
 #
-# パッケージをインストールしてから、dotfiles を配置する
+# 足りないパッケージをインストールしてから、dotfiles を配置する
 #
 # 処理は lib/ に、インストールするものの一覧は packages/ に、配置するファイルは src/ にある
 #   lib/common.sh  OS に依存しない道具
@@ -48,8 +48,14 @@ run() {
   . "$DOT_DIRECTORY/lib/user.sh"
 
   os_preflight
-  os_install
-  user_install
+  os_check
+  user_check
+  if [ "$INSTALL_COUNT" -eq 0 ]; then
+    log "必要なパッケージはすべてインストール済みです"
+  else
+    os_install
+    user_install
+  fi
   user_deploy
   os_deploy
 }

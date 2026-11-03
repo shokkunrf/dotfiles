@@ -3,7 +3,8 @@
 # macOS の処理
 #
 #   os_preflight : 実行できる環境か
-#   os_install   : Homebrew と Brewfile のインストール
+#   os_check     : インストールが必要なものを調べる (何も表示せず、sudo も使わない)
+#   os_install   : Homebrew と Brewfile のうち、足りないものをインストール
 #   os_deploy    : macOS 用のリンクと defaults の設定
 #   os_links     : リンクする一覧
 #
@@ -47,6 +48,11 @@ install_homebrew() {
   load_homebrew || die "Homebrew のインストールに失敗しました"
 }
 
+# Brewfile の brew / cask の名前を 1 行ずつ出力する: brewfile_entries <brew|cask>
+brewfile_entries() {
+  awk -F'"' -v kind="$1 " '$1 == kind { print $2 }' "$BREWFILE"
+}
+
 # --- defaults -------------------------------------------------------------
 
 deploy_defaults() {
@@ -77,12 +83,47 @@ os_preflight() {
   fi
 }
 
+os_check() {
+  local installed_formulae='' installed_casks='' name
+  if load_homebrew; then
+    NEED_HOMEBREW=false
+    installed_formulae="$(brew list --formula -1 2>/dev/null || true)"
+    installed_casks="$(brew list --cask -1 2>/dev/null || true)"
+  else
+    NEED_HOMEBREW=true
+    INSTALL_COUNT=$((INSTALL_COUNT + 1))
+  fi
+
+  MISSING_FORMULAE=''
+  while read -r name; do
+    if ! grep -qxF "$name" <<<"$installed_formulae"; then
+      MISSING_FORMULAE="$MISSING_FORMULAE $name"
+    fi
+  done < <(brewfile_entries brew)
+
+  # HOMEBREW_BUNDLE_CASK_SKIP で除外したものは数えない
+  MISSING_CASKS=''
+  while read -r name; do
+    case " ${HOMEBREW_BUNDLE_CASK_SKIP:-} " in
+      *" $name "*) continue ;;
+    esac
+    if ! grep -qxF "$name" <<<"$installed_casks"; then
+      MISSING_CASKS="$MISSING_CASKS $name"
+    fi
+  done < <(brewfile_entries cask)
+
+  INSTALL_COUNT=$((INSTALL_COUNT + $(count_words "$MISSING_FORMULAE$MISSING_CASKS")))
+}
+
 os_install() {
-  if ! load_homebrew; then
+  if $NEED_HOMEBREW; then
     install_homebrew
   fi
-  log "Homebrew のパッケージをインストールします"
-  brew bundle --file="$BREWFILE"
+  if [ -n "$MISSING_FORMULAE$MISSING_CASKS" ]; then
+    log "Homebrew のパッケージをインストールします"
+    # 足りないもの以外は変えないよう、インストール済みのものは更新しない
+    brew bundle --file="$BREWFILE" --no-upgrade
+  fi
 }
 
 os_deploy() {
