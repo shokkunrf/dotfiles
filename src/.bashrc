@@ -54,6 +54,9 @@ if ! shopt -oq posix; then
   elif [ -f /etc/bash_completion ]; then
     # shellcheck source=/dev/null
     . /etc/bash_completion
+  elif [ -n "${HOMEBREW_PREFIX:-}" ] && [ -f "$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh" ]; then
+    # shellcheck source=/dev/null
+    . "$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh"
   fi
 fi
 

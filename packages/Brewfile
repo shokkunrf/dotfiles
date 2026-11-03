@@ -1,6 +1,7 @@
 # Homebrew でインストールするもの (macOS)
 
 brew "bash"
+brew "bash-completion@2"
 brew "jq"
 brew "fzf"
 cask "amethyst"
