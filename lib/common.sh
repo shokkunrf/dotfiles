@@ -93,7 +93,7 @@ require_sudo() {
     return 0
   fi
   command -v sudo >/dev/null 2>&1 ||
-    die "$1に管理者権限が必要ですが、sudo が見つかりません。root で実行してください"
+    die "$1に管理者権限が必要ですが、sudo が見つかりません。root で実行するか、--no-packages を付けてください"
   if ! sudo -n true 2>/dev/null; then
     sudo -v -p "$1に管理者権限が必要です。[sudo] %u のパスワード: " ||
       die "sudo の認証に失敗しました"

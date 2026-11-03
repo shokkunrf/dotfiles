@@ -12,9 +12,10 @@
 #   lib/debian.sh  Debian の処理 (apt / Docker / Chrome / VS Code、GUI 用のリンク)
 #   lib/darwin.sh  macOS の処理 (Homebrew、macOS 用のリンク、defaults)
 #
-# usage: ./install.sh [--with-gui]
+# usage: ./install.sh [--with-gui] [--no-packages]
 #
 #   --with-gui     GUI 環境用のパッケージ・設定も入れる (Debian のみ)
+#   --no-packages  [1/3] [2/3] を行わず、設定の配置だけ行う (sudo を一切使わない)
 #
 # sudo は付けずに実行する。root 権限が必要な場合は、何かを表示する前に一度だけパスワードを聞く。
 # 一度表示が始まったら、終了まで入力待ちで止まることはない。
@@ -33,9 +34,11 @@ run() {
   . "$DOT_DIRECTORY/lib/common.sh"
 
   WITH_GUI=false
+  local with_packages=true
   while [ $# -gt 0 ]; do
     case "$1" in
       --with-gui) WITH_GUI=true ;;
+      --no-packages) with_packages=false ;;
       -h | --help)
         sed -n '2,/^set -euo/p' "$DOT_DIRECTORY/install.sh" | sed '$d; s/^# \{0,1\}//'
         exit 0
@@ -51,34 +54,44 @@ run() {
 
   local os
   os="$(detect_os)"
-  [ "$os" != unsupported ] || die "Debian 系 Linux と macOS のみ対応しています"
-  # shellcheck source=lib/debian.sh
-  . "$DOT_DIRECTORY/lib/$os.sh"
+  if [ "$os" != unsupported ]; then
+    # shellcheck source=lib/debian.sh
+    . "$DOT_DIRECTORY/lib/$os.sh"
+  elif $with_packages; then
+    die "パッケージのインストールは Debian 系 Linux と macOS のみ対応しています (--no-packages なら設定の配置だけ行えます)"
+  fi
   # shellcheck source=lib/user.sh
   . "$DOT_DIRECTORY/lib/user.sh"
 
   # [1/3] 確認 は何も表示せずに行い、root 権限が必要なら最初にパスワードを聞いてから表示する
-  os_preflight
-  os_check
-  user_check
-  if [ -n "$SUDO_REASON" ]; then
-    require_sudo "$SUDO_REASON"
-  fi
+  if $with_packages; then
+    os_preflight
+    os_check
+    user_check
+    if [ -n "$SUDO_REASON" ]; then
+      require_sudo "$SUDO_REASON"
+    fi
 
-  step 1/3 "確認"
-  printf '%s' "$REPORT"
-  if [ "$INSTALL_COUNT" -eq 0 ]; then
-    step 2/3 "インストール" "スキップ (すべてインストール済み)"
+    step 1/3 "確認"
+    printf '%s' "$REPORT"
+    if [ "$INSTALL_COUNT" -eq 0 ]; then
+      step 2/3 "インストール" "スキップ (すべてインストール済み)"
+    else
+      step 2/3 "インストール"
+      os_install
+      user_install
+    fi
   else
-    step 2/3 "インストール"
-    os_install
-    user_install
+    step 1/3 "確認" "スキップ (--no-packages)"
+    step 2/3 "インストール" "スキップ (--no-packages)"
   fi
 
   step 3/3 "設定の配置"
   local before=$((LINK_COUNT + SETTING_COUNT))
   user_deploy
-  os_deploy
+  if [ "$os" != unsupported ]; then
+    os_deploy
+  fi
   if [ $((LINK_COUNT + SETTING_COUNT)) -eq "$before" ]; then
     log "すべて配置済み"
   fi
