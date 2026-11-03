@@ -12,20 +12,41 @@
 #   lib/debian.sh  Debian の処理 (apt / Docker / Chrome / VS Code、GUI 用のリンク)
 #   lib/darwin.sh  macOS の処理 (Homebrew、macOS 用のリンク、defaults)
 #
-# usage: ./install.sh [--with-gui] [--no-packages]
+# リポジトリ内から実行:
+#   ./install.sh [--with-gui] [--no-packages]
 #
 #   --with-gui     GUI 環境用のパッケージ・設定も入れる (Debian のみ)
 #   --no-packages  [1/3] [2/3] を行わず、設定の配置だけ行う (sudo を一切使わない)
 #
+# リポジトリを取得せずに実行 (DOTFILES_DIR に clone してから実行する):
+#   curl -fsSL https://raw.githubusercontent.com/shokkunrf/dotfiles/HEAD/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/shokkunrf/dotfiles/HEAD/install.sh | bash -s -- --with-gui
+#
+# 環境変数:
+#   DOTFILES_DIR     clone 先           (default: ~/.dotfiles)
+#   DOTFILES_REPO    clone する URL     (default: https://github.com/shokkunrf/dotfiles.git)
+#   DOTFILES_BRANCH  clone するブランチ (default: リポジトリのデフォルトブランチ)
+#
 # sudo は付けずに実行する。root 権限が必要な場合は、何かを表示する前に一度だけパスワードを聞く。
 # 一度表示が始まったら、終了まで入力待ちで止まることはない。
+#
+# パイプ経由で実行されても途中で標準入力を読まれないよう、全体を関数にしてから最後に呼び出す
 set -euo pipefail
 
 main() {
-  local self_dir
-  self_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  local self_dir=""
+  if [ -n "${BASH_SOURCE[0]:-}" ] && [ -f "${BASH_SOURCE[0]}" ]; then
+    self_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  fi
+
+  if [ -z "$self_dir" ] || [ ! -f "$self_dir/lib/common.sh" ]; then
+    bootstrap "$@"
+    exec "$DOTFILES_DIR/install.sh" "$@"
+  fi
   run "$self_dir" "$@"
 }
+
+# --- リポジトリ内から実行した場合 ---------------------------------------------
 
 run() {
   DOT_DIRECTORY="$1"
@@ -107,6 +128,111 @@ run() {
   elif [ $((INSTALL_COUNT + LINK_COUNT + SETTING_COUNT)) -gt 0 ]; then
     echo "設定を反映するにはシェルを再起動してください: exec \$SHELL -l"
   fi
+}
+
+# --- リポジトリを取得せずに実行した場合 ---------------------------------------
+# 既に clone 済みなら何も表示せずにそれを使う
+
+bootstrap() {
+  DOTFILES_DIR="${DOTFILES_DIR:-$HOME/.dotfiles}"
+  DOTFILES_REPO="${DOTFILES_REPO:-https://github.com/shokkunrf/dotfiles.git}"
+  DOTFILES_BRANCH="${DOTFILES_BRANCH:-}"
+
+  if [ -f "$DOTFILES_DIR/install.sh" ]; then
+    return 0
+  fi
+
+  # 初回 (clone が必要) は、パッケージのインストールや git の導入に root 権限を使うので、
+  # 何かを表示する前にパスワードを聞いておく (clone 後の install.sh では聞き直さない)
+  local with_packages=true arg
+  for arg in "$@"; do
+    if [ "$arg" = --no-packages ]; then
+      with_packages=false
+    fi
+  done
+  if $with_packages || ! has_git; then
+    sudo_once "初回セットアップ"
+  fi
+
+  if ! has_git; then
+    install_git
+  fi
+  printf 'clone: %s (%s) -> %s\n' "$DOTFILES_REPO" "${DOTFILES_BRANCH:-デフォルトブランチ}" "$DOTFILES_DIR"
+  mkdir -p "$(dirname "$DOTFILES_DIR")"
+  if [ -n "$DOTFILES_BRANCH" ]; then
+    GIT_TERMINAL_PROMPT=0 git clone -q --branch "$DOTFILES_BRANCH" "$DOTFILES_REPO" "$DOTFILES_DIR"
+  else
+    GIT_TERMINAL_PROMPT=0 git clone -q "$DOTFILES_REPO" "$DOTFILES_DIR"
+  fi
+}
+
+has_git() {
+  case "$(uname -s)" in
+    # macOS の /usr/bin/git は Command Line Tools が無いとインストールのダイアログを出すだけ
+    Darwin) xcode-select -p >/dev/null 2>&1 ;;
+    *) command -v git >/dev/null 2>&1 ;;
+  esac
+}
+
+install_git() {
+  case "$(uname -s)" in
+    Darwin)
+      # Command Line Tools は Homebrew のインストーラが非対話で入れてくれる
+      echo "Command Line Tools を入れるため、Homebrew をインストールします"
+      local tmp
+      tmp="$(mktemp -d)"
+      curl -fsSL --retry 3 -o "$tmp/install.sh" https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh ||
+        bootstrap_error "Homebrew のインストーラを取得できませんでした"
+      NONINTERACTIVE=1 /bin/bash "$tmp/install.sh"
+      rm -rf "$tmp"
+      ;;
+    *)
+      command -v apt-get >/dev/null 2>&1 || bootstrap_error "git をインストールしてから再実行してください"
+      echo "git をインストールします"
+      # 他の apt (自動更新など) が実行中なら終わるまで待つ (lib/debian.sh の apt_update / apt_install と同じ)
+      local output attempt=1
+      while ! output="$(as_root env LC_ALL=C apt-get update -q 2>&1)"; do
+        if ! grep -q 'Could not get lock' <<<"$output" || [ "$attempt" -ge 20 ]; then
+          printf '%s\n' "$output" >&2
+          bootstrap_error "apt-get update に失敗しました"
+        fi
+        echo "他の apt が実行中のため、終わるのを待っています ($attempt/20)"
+        attempt=$((attempt + 1))
+        sleep 15
+      done
+      as_root env DEBIAN_FRONTEND=noninteractive apt-get install -y -q -o DPkg::Lock::Timeout=300 git ca-certificates
+      ;;
+  esac
+  has_git || bootstrap_error "git をインストールできませんでした"
+}
+
+# パスワードが必要ならここで一度だけ聞き、終了まで認証を維持する
+# (Command Line Tools のインストールなど時間のかかる処理の途中で切れないように。clone 後の install.sh にも引き継ぐ)
+sudo_once() {
+  if [ "$(id -u)" -eq 0 ]; then
+    return 0
+  fi
+  command -v sudo >/dev/null 2>&1 || bootstrap_error "$1に管理者権限が必要ですが、sudo が見つかりません"
+  if ! sudo -n true 2>/dev/null; then
+    sudo -v -p "$1に管理者権限が必要です。[sudo] %u のパスワード: " || bootstrap_error "sudo の認証に失敗しました"
+  fi
+  (while kill -0 "$$" 2>/dev/null; do
+    sudo -n true
+    sleep 50
+  done) >/dev/null 2>&1 &
+}
+
+as_root() {
+  if [ "$(id -u)" -eq 0 ]; then
+    "$@"
+  else
+    sudo -n "$@"
+  fi
+}
+
+bootstrap_error() {
+  printf '\033[1;31merror:\033[0m %s\n' "$*" >&2
+  exit 1
 }
 
 main "$@"
