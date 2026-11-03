@@ -18,7 +18,8 @@ HISTSIZE=2000
 HISTFILESIZE=100000
 
 shopt -s checkwinsize
-shopt -s globstar
+# globstar は bash 4 以降 (macOS 標準の bash 3.2 には無い)
+shopt -s globstar 2>/dev/null
 
 RED="\e[31m"
 GREEN="\e[32m"
