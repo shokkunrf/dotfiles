@@ -1,0 +1,10 @@
+# Debian で apt を使ってインストールするもの (CUI)
+#
+# 1 行に 1 つ。# 以降はコメント
+vim
+fzf
+jq
+wget
+curl
+git
+sudo

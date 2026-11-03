@@ -3,13 +3,15 @@
 # 環境構築を行う
 #
 # usage: ./install.sh [--with-gui]
-#   --with-gui  GUI 環境用の設定も配置する (Debian のみ)
+#   --with-gui  GUI 環境用のパッケージ・設定も入れる (Debian のみ)
 #
-# 処理は lib/ に、配置するファイルは src/ にある
+# パッケージをインストールしてから、dotfiles を配置する
+#
+# 処理は lib/ に、インストールするものの一覧は packages/ に、配置するファイルは src/ にある
 #   lib/common.sh  OS に依存しない道具
 #   lib/user.sh    OS 共通でユーザ領域だけを変更する処理 (リンク、git の設定)
-#   lib/debian.sh  Debian の処理 (GUI 用のリンク)
-#   lib/darwin.sh  macOS の処理 (macOS 用のリンク、defaults)
+#   lib/debian.sh  Debian の処理 (apt / Docker / Chrome / VS Code / wd、GUI 用のリンク)
+#   lib/darwin.sh  macOS の処理 (Homebrew、macOS 用のリンク、defaults)
 set -euo pipefail
 
 main() {
@@ -39,17 +41,16 @@ run() {
 
   local os
   os="$(detect_os)"
-  if [ "$os" != unsupported ]; then
-    # shellcheck source=lib/debian.sh
-    . "$DOT_DIRECTORY/lib/$os.sh"
-  fi
+  [ "$os" != unsupported ] || die "Debian 系 Linux と macOS のみ対応しています"
+  # shellcheck source=lib/debian.sh
+  . "$DOT_DIRECTORY/lib/$os.sh"
   # shellcheck source=lib/user.sh
   . "$DOT_DIRECTORY/lib/user.sh"
 
+  os_preflight
+  os_install
   user_deploy
-  if [ "$os" != unsupported ]; then
-    os_deploy
-  fi
+  os_deploy
 }
 
 main "$@"
