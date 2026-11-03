@@ -4,7 +4,7 @@
 #
 #   os_preflight : 実行できる環境か
 #   os_check     : インストールが必要なものを調べる (何も表示せず、sudo も使わない)
-#   os_install   : apt / Docker / Chrome / VS Code のうち、足りないものをインストール
+#   os_install   : apt / Docker / Chrome / VS Code のうち、足りないものをインストール (事前に require_sudo が必要)
 #   os_deploy    : GUI 用のリンク
 #   os_links     : リンクする一覧
 #
@@ -28,8 +28,26 @@ EOF
 
 # --- apt ------------------------------------------------------------------
 
+# 他の apt (自動更新など) が実行中でロックを取れない場合は、終わるまで待ってやり直す
+# (apt-get update は DPkg::Lock::Timeout では待たない。判定のためメッセージは英語にする)
+apt_update() {
+  local output attempt=1
+  while ! output="$(as_root env LC_ALL=C apt-get update 2>&1)"; do
+    if ! grep -q 'Could not get lock' <<<"$output" || [ "$attempt" -ge 20 ]; then
+      printf '%s\n' "$output" >&2
+      die "apt-get update に失敗しました"
+    fi
+    log "他の apt が実行中のため、終わるのを待っています ($attempt/20)"
+    attempt=$((attempt + 1))
+    sleep 15
+  done
+}
+
+# 設定ファイルの上書き確認などでも止まらず、他の apt が実行中なら終わるまで待つ
 apt_install() {
-  as_root env DEBIAN_FRONTEND=noninteractive apt-get install -y "$@"
+  as_root env DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a \
+    apt-get install -y -o DPkg::Lock::Timeout=300 \
+    -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold "$@"
 }
 
 is_dpkg_installed() {
@@ -95,7 +113,7 @@ install_docker() {
     as_root chmod a+r /etc/apt/keyrings/docker.asc
     echo "deb [arch=$arch signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/$distro $codename stable" |
       as_root tee /etc/apt/sources.list.d/docker.list >/dev/null
-    as_root apt-get update
+    apt_update
     apt_install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
   fi
 
@@ -170,14 +188,18 @@ os_check() {
     fi
   done
 
-  INSTALL_COUNT=$((INSTALL_COUNT + ${#MISSING_APT[@]} + ${#MISSING_OTHERS[@]}))
+  local count=$((${#MISSING_APT[@]} + ${#MISSING_OTHERS[@]}))
+  INSTALL_COUNT=$((INSTALL_COUNT + count))
+  if [ "$count" -gt 0 ]; then
+    add_sudo_reason "パッケージ $count 件のインストール"
+  fi
 }
 
 os_install() {
   local package
   # Chrome / VS Code の .deb の依存関係の解決にも使うので、apt で何か入れる場合は先に更新する
   if [ $((${#MISSING_APT[@]} + ${#MISSING_OTHERS[@]})) -gt 0 ]; then
-    as_root apt-get update
+    apt_update
   fi
   if [ ${#MISSING_APT[@]} -gt 0 ]; then
     log "apt パッケージをインストールします"

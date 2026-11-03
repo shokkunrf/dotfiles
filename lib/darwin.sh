@@ -4,7 +4,7 @@
 #
 #   os_preflight : 実行できる環境か
 #   os_check     : インストールが必要なものを調べる (何も表示せず、sudo も使わない)
-#   os_install   : Homebrew と Brewfile のうち、足りないものをインストール
+#   os_install   : Homebrew と Brewfile のうち、足りないものをインストール (root 権限が必要なものがあれば事前に require_sudo が必要)
 #   os_deploy    : macOS 用のリンクと defaults の設定
 #   os_links     : リンクする一覧
 #
@@ -92,6 +92,7 @@ os_check() {
   else
     NEED_HOMEBREW=true
     INSTALL_COUNT=$((INSTALL_COUNT + 1))
+    add_sudo_reason "Homebrew のインストール"
   fi
 
   MISSING_FORMULAE=''
@@ -113,6 +114,10 @@ os_check() {
   done < <(brewfile_entries cask)
 
   INSTALL_COUNT=$((INSTALL_COUNT + $(count_words "$MISSING_FORMULAE$MISSING_CASKS")))
+  # cask は pkg 形式のものがあり root 権限が必要
+  if ! $NEED_HOMEBREW && [ -n "$MISSING_CASKS" ]; then
+    add_sudo_reason "アプリ $(count_words "$MISSING_CASKS") 件のインストール"
+  fi
 }
 
 os_install() {

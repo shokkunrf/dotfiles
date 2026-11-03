@@ -7,6 +7,9 @@
 #
 # 足りないパッケージをインストールしてから、dotfiles を配置する
 #
+# sudo は付けずに実行する。root 権限が必要な場合は、何かを表示する前に一度だけパスワードを聞く。
+# 一度表示が始まったら、終了まで入力待ちで止まることはない。
+#
 # 処理は lib/ に、インストールするものの一覧は packages/ に、配置するファイルは src/ にある
 #   lib/common.sh  OS に依存しない道具
 #   lib/user.sh    OS 共通でユーザ領域だけを変更する処理 (wd、リンク、git の設定)
@@ -36,7 +39,7 @@ run() {
   done
 
   if is_sudo; then
-    die "sudo を付けずに実行してください"
+    die "sudo を付けずに実行してください (root 権限が必要な場合は最初にパスワードを聞きます)"
   fi
 
   local os
@@ -48,8 +51,13 @@ run() {
   . "$DOT_DIRECTORY/lib/user.sh"
 
   os_preflight
+  # 確認は何も表示せずに行い、root 権限が必要なら最初にパスワードを聞く
   os_check
   user_check
+  if [ -n "$SUDO_REASON" ]; then
+    require_sudo "$SUDO_REASON"
+  fi
+
   if [ "$INSTALL_COUNT" -eq 0 ]; then
     log "必要なパッケージはすべてインストール済みです"
   else

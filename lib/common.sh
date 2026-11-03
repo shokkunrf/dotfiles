@@ -19,6 +19,15 @@ die() {
 # *_check は何も表示せず、sudo も使わずに、以下に結果を入れる
 
 INSTALL_COUNT=0 # インストールする件数
+SUDO_REASON=''  # root 権限が必要な理由 (不要なら空)
+
+add_sudo_reason() {
+  if [ -z "$SUDO_REASON" ]; then
+    SUDO_REASON="$1"
+  else
+    SUDO_REASON="$SUDO_REASON・$1"
+  fi
+}
 
 # 単語の数: count_words <文字列>
 count_words() {
@@ -55,12 +64,35 @@ is_root() { [ "$(id -u)" -eq 0 ]; }
 # sudo 経由で実行されているか (sudo ./install.sh のような誤用の検出に使う)
 is_sudo() { is_root && [ -n "${SUDO_USER:-}" ]; }
 
+# root 権限が必要な場合に、何かを表示する前に呼ぶ: require_sudo <理由>
+# パスワードはここで一度だけ聞き、スクリプトが終わるまで認証を維持する (途中で入力待ちにしない)
+SUDO_READY=false
+require_sudo() {
+  if is_root || $SUDO_READY; then
+    return 0
+  fi
+  command -v sudo >/dev/null 2>&1 ||
+    die "$1に管理者権限が必要ですが、sudo が見つかりません。root で実行してください"
+  if ! sudo -n true 2>/dev/null; then
+    sudo -v -p "$1に管理者権限が必要です。[sudo] %u のパスワード: " ||
+      die "sudo の認証に失敗しました"
+  fi
+  (while kill -0 "$$" 2>/dev/null; do
+    sudo -n true
+    sleep 50
+  done) >/dev/null 2>&1 &
+  SUDO_KEEPALIVE_PID=$!
+  trap 'kill "$SUDO_KEEPALIVE_PID" 2>/dev/null || true' EXIT
+  SUDO_READY=true
+}
+
 # root 権限でコマンドを実行する (root なら直接、そうでなければ sudo 経由)
+# 事前に require_sudo を呼んでおくこと。途中でパスワード入力待ちにならないよう -n を付ける
 as_root() {
   if is_root; then
     "$@"
   else
-    sudo "$@"
+    sudo -n "$@"
   fi
 }
 
