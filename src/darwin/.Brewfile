@@ -1,4 +1,5 @@
 brew "jq"
+brew "fzf"
 cask "amethyst"
 cask "docker-desktop"
 cask "gimp"
