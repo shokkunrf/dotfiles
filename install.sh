@@ -13,10 +13,14 @@
 #   lib/darwin.sh  macOS の処理 (Homebrew、macOS 用のリンク、defaults)
 #
 # リポジトリ内から実行:
-#   ./install.sh [--with-gui] [--no-packages]
+#   ./install.sh [--with-gui] [--packages | --no-packages]
 #
 #   --with-gui     GUI 環境用のパッケージ・設定も入れる (Debian のみ)
+#   --packages     [1/3] [2/3] を行う (コンテナ外では指定しなくても行う)
 #   --no-packages  [1/3] [2/3] を行わず、設定の配置だけ行う (sudo を一切使わない)
+#
+# devcontainer / Codespaces などのコンテナ内では、引数を渡せないため自動で --no-packages になる
+# (パッケージはコンテナのイメージや devcontainer の Features で用意する)
 #
 # リポジトリを取得せずに実行 (DOTFILES_DIR に clone してから実行する):
 #   curl -fsSL https://raw.githubusercontent.com/shokkunrf/dotfiles/HEAD/install.sh | bash
@@ -55,11 +59,12 @@ run() {
   . "$DOT_DIRECTORY/lib/common.sh"
 
   WITH_GUI=false
-  local with_packages=true
+  local packages=auto with_packages skip_reason
   while [ $# -gt 0 ]; do
     case "$1" in
       --with-gui) WITH_GUI=true ;;
-      --no-packages) with_packages=false ;;
+      --packages) packages=true ;;
+      --no-packages) packages=false ;;
       -h | --help)
         sed -n '2,/^set -euo/p' "$DOT_DIRECTORY/install.sh" | sed '$d; s/^# \{0,1\}//'
         exit 0
@@ -72,6 +77,22 @@ run() {
   if is_sudo; then
     die "sudo を付けずに実行してください (root 権限が必要な場合は最初にパスワードを聞きます)"
   fi
+
+  case "$packages" in
+    true) with_packages=true ;;
+    false)
+      with_packages=false
+      skip_reason="--no-packages"
+      ;;
+    auto)
+      if is_container; then
+        with_packages=false
+        skip_reason="コンテナ内のため。インストールする場合は --packages"
+      else
+        with_packages=true
+      fi
+      ;;
+  esac
 
   local os
   os="$(detect_os)"
@@ -108,8 +129,8 @@ run() {
       fi
     fi
   else
-    step 1/3 "確認" "スキップ (--no-packages)"
-    step 2/3 "インストール" "スキップ (--no-packages)"
+    step 1/3 "確認" "スキップ ($skip_reason)"
+    step 2/3 "インストール" "スキップ ($skip_reason)"
   fi
 
   step 3/3 "設定の配置"
@@ -145,10 +166,15 @@ bootstrap() {
   # 初回 (clone が必要) は、パッケージのインストールや git の導入に root 権限を使うので、
   # 何かを表示する前にパスワードを聞いておく (clone 後の install.sh では聞き直さない)
   local with_packages=true arg
+  if [ -n "${CODESPACES:-}" ] || [ -n "${REMOTE_CONTAINERS:-}" ] ||
+    [ -f /.dockerenv ] || [ -f /run/.containerenv ]; then
+    with_packages=false
+  fi
   for arg in "$@"; do
-    if [ "$arg" = --no-packages ]; then
-      with_packages=false
-    fi
+    case "$arg" in
+      --packages) with_packages=true ;;
+      --no-packages) with_packages=false ;;
+    esac
   done
   if $with_packages || ! has_git; then
     sudo_once "初回セットアップ"

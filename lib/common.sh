@@ -78,6 +78,13 @@ detect_os() {
   esac
 }
 
+# devcontainer / Codespaces などのコンテナ内か
+# (CODESPACES は Codespaces、REMOTE_CONTAINERS は VS Code Dev Containers が設定する)
+is_container() {
+  [ -n "${CODESPACES:-}" ] || [ -n "${REMOTE_CONTAINERS:-}" ] ||
+    [ -f /.dockerenv ] || [ -f /run/.containerenv ]
+}
+
 # --- 権限 -----------------------------------------------------------------
 
 is_root() { [ "$(id -u)" -eq 0 ]; }
