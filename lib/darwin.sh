@@ -18,6 +18,7 @@ os_links() {
   cat <<'EOF'
 darwin/vscode/settings.json|Library/Application Support/Code/User/settings.json
 darwin/vscode/keybindings.json|Library/Application Support/Code/User/keybindings.json
+.config/karabiner/assets
 EOF
 }
 
