@@ -8,3 +8,4 @@ wget
 curl
 git
 sudo
+bash-completion
