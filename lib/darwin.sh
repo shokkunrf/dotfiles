@@ -6,7 +6,7 @@
 #   os_check     : [1/3] 確認         Homebrew と Brewfile
 #   os_install   : [2/3] インストール (root 権限が必要なものがあれば事前に require_sudo が必要)
 #   os_deploy    : [3/3] 設定の配置   macOS 用のリンクと defaults の設定
-#   os_links     : リンクする一覧
+#   os_links     : リンクする一覧 (test/verify.sh でも使う)
 #   target_shell / current_login_shell : ログインシェル (lib/common.sh で使う)
 #
 # インストールするものの一覧は packages/Brewfile

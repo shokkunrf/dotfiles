@@ -5,7 +5,7 @@
 #   user_check   : [1/3] 確認         wd
 #   user_install : [2/3] インストール wd を ~/.local/bin に入れる
 #   user_deploy  : [3/3] 設定の配置   dotfiles のリンクと git の設定
-#   cui_links    : リンクする dotfiles の一覧
+#   cui_links    : リンクする dotfiles の一覧 (test/verify.sh でも使う)
 #   link_list    : 一覧のとおりにリンクする (lib/debian.sh, lib/darwin.sh でも使う)
 #
 # 呼び出し側で DOT_DIRECTORY を設定し、lib/common.sh を source しておく
