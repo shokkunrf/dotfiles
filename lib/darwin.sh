@@ -2,10 +2,10 @@
 #
 # macOS の処理
 #
-#   os_preflight : 実行できる環境か
-#   os_check     : インストールが必要なものを調べる (何も表示せず、sudo も使わない)
-#   os_install   : Homebrew と Brewfile のうち、足りないものをインストール (root 権限が必要なものがあれば事前に require_sudo が必要)
-#   os_deploy    : macOS 用のリンクと defaults の設定
+#   os_preflight : 実行できる環境か (何かを表示する前に呼ぶ)
+#   os_check     : [1/3] 確認         Homebrew と Brewfile
+#   os_install   : [2/3] インストール (root 権限が必要なものがあれば事前に require_sudo が必要)
+#   os_deploy    : [3/3] 設定の配置   macOS 用のリンクと defaults の設定
 #   os_links     : リンクする一覧
 #
 # インストールするものの一覧は packages/Brewfile
@@ -84,34 +84,56 @@ os_preflight() {
 }
 
 os_check() {
-  local installed_formulae='' installed_casks='' name
+  local installed_formulae='' installed_casks='' name total skipped=0 note=''
   if load_homebrew; then
     NEED_HOMEBREW=false
+    report homebrew "インストール済み"
     installed_formulae="$(brew list --formula -1 2>/dev/null || true)"
     installed_casks="$(brew list --cask -1 2>/dev/null || true)"
   else
     NEED_HOMEBREW=true
     INSTALL_COUNT=$((INSTALL_COUNT + 1))
+    report homebrew "未インストール"
     add_sudo_reason "Homebrew のインストール"
   fi
 
   MISSING_FORMULAE=''
+  total=0
   while read -r name; do
+    total=$((total + 1))
     if ! grep -qxF "$name" <<<"$installed_formulae"; then
       MISSING_FORMULAE="$MISSING_FORMULAE $name"
     fi
   done < <(brewfile_entries brew)
+  if [ -z "$MISSING_FORMULAE" ]; then
+    report brew "$total 件すべてインストール済み"
+  else
+    report brew "$total 件中 $(count_words "$MISSING_FORMULAE") 件が未インストール (${MISSING_FORMULAE# })"
+  fi
 
   # HOMEBREW_BUNDLE_CASK_SKIP で除外したものは数えない
   MISSING_CASKS=''
+  total=0
   while read -r name; do
     case " ${HOMEBREW_BUNDLE_CASK_SKIP:-} " in
-      *" $name "*) continue ;;
+      *" $name "*)
+        skipped=$((skipped + 1))
+        continue
+        ;;
     esac
+    total=$((total + 1))
     if ! grep -qxF "$name" <<<"$installed_casks"; then
       MISSING_CASKS="$MISSING_CASKS $name"
     fi
   done < <(brewfile_entries cask)
+  if [ "$skipped" -gt 0 ]; then
+    note=" (HOMEBREW_BUNDLE_CASK_SKIP で $skipped 件除外)"
+  fi
+  if [ -z "$MISSING_CASKS" ]; then
+    report cask "$total 件すべてインストール済み$note"
+  else
+    report cask "$total 件中 $(count_words "$MISSING_CASKS") 件が未インストール (${MISSING_CASKS# })$note"
+  fi
 
   INSTALL_COUNT=$((INSTALL_COUNT + $(count_words "$MISSING_FORMULAE$MISSING_CASKS")))
   # cask は pkg 形式のものがあり root 権限が必要

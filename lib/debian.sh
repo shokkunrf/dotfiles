@@ -2,10 +2,10 @@
 #
 # Debian の処理
 #
-#   os_preflight : 実行できる環境か
-#   os_check     : インストールが必要なものを調べる (何も表示せず、sudo も使わない)
-#   os_install   : apt / Docker / Chrome / VS Code のうち、足りないものをインストール (事前に require_sudo が必要)
-#   os_deploy    : GUI 用のリンク
+#   os_preflight : 実行できる環境か (何かを表示する前に呼ぶ)
+#   os_check     : [1/3] 確認         apt / Docker / Chrome / VS Code
+#   os_install   : [2/3] インストール (事前に require_sudo が必要)
+#   os_deploy    : [3/3] 設定の配置   GUI 用のリンク
 #   os_links     : リンクする一覧
 #
 # インストールするものの一覧は packages/apt-cui.txt と packages/apt-gui.txt
@@ -180,11 +180,25 @@ os_check() {
       MISSING_APT+=("$spec")
     fi
   done
+  if [ ${#MISSING_APT[@]} -eq 0 ]; then
+    report apt "${#specs[@]} 件すべてインストール済み"
+  else
+    report apt "${#specs[@]} 件中 ${#MISSING_APT[@]} 件が未インストール (${MISSING_APT[*]})"
+  fi
 
   MISSING_OTHERS=()
   for package in "${packages[@]}"; do
-    if "supports_$package" && "needs_$package"; then
+    if ! "supports_$package"; then
+      report "$package" "対象外 ($(dpkg --print-architecture))"
+    elif ! "needs_$package"; then
+      report "$package" "インストール済み"
+    else
       MISSING_OTHERS+=("$package")
+      if [ "$package" = docker ] && is_dpkg_installed docker-ce; then
+        report "$package" "docker グループへの追加が必要"
+      else
+        report "$package" "未インストール"
+      fi
     fi
   done
 

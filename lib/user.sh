@@ -2,9 +2,9 @@
 #
 # OS 共通で、ユーザ領域だけを変更する処理 (sudo を一切使わない)
 #
-#   user_check   : wd のインストールが必要か調べる (何も表示しない)
-#   user_install : wd を ~/.local/bin に入れる
-#   user_deploy  : dotfiles のリンクと git の設定
+#   user_check   : [1/3] 確認         wd
+#   user_install : [2/3] インストール wd を ~/.local/bin に入れる
+#   user_deploy  : [3/3] 設定の配置   dotfiles のリンクと git の設定
 #   cui_links    : リンクする dotfiles の一覧
 #   link_list    : 一覧のとおりにリンクする (lib/debian.sh, lib/darwin.sh でも使う)
 #
@@ -61,9 +61,11 @@ link() {
     mkdir -p "$(dirname "$BACKUP_DIRECTORY/$rel")"
     mv "$dest" "$BACKUP_DIRECTORY/$rel"
     log "退避   ~/$rel -> $BACKUP_DIRECTORY/$rel"
+    BACKUP_COUNT=$((BACKUP_COUNT + 1))
   fi
   ln -s "$src" "$dest"
   log "リンク ~/$rel"
+  LINK_COUNT=$((LINK_COUNT + 1))
 }
 
 # 一覧のとおりにリンクする: link_list <一覧を出力する関数>
@@ -96,8 +98,10 @@ user_check() {
   if needs_wd; then
     NEED_WD=true
     INSTALL_COUNT=$((INSTALL_COUNT + 1))
+    report wd "未インストール"
   else
     NEED_WD=false
+    report wd "インストール済み"
   fi
 }
 

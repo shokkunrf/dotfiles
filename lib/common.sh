@@ -2,7 +2,8 @@
 # ここで定義する変数 (INSTALL_COUNT など) は install.sh や lib/*.sh から使うため、未使用の警告は出さない
 # shellcheck disable=SC2034
 #
-# OS に依存しない道具 (表示、OS の判定、権限、ダウンロード) と、確認の結果を集めるための変数
+# OS に依存しない道具 (表示、sudo、ダウンロード、OS の判定) と、
+# [1/3] 確認 の結果を集めるための変数
 #
 # macOS 標準の bash 3.2 でも動くように書くこと (連想配列や ${var,,} などは使わない)
 
@@ -15,11 +16,30 @@ die() {
   exit 1
 }
 
+# 手順の見出し: step <番号> <名前> [補足]
+STEP_PRINTED=false
+step() {
+  $STEP_PRINTED && echo
+  STEP_PRINTED=true
+  printf '\033[1;34m[%s]\033[0m \033[1m%s\033[0m%s\n' "$1" "$2" "${3:+  $3}"
+}
+
+# 確認結果の 1 行: item <名前> <状態>
+item() { printf '    %-8s %s\n' "$1" "$2"; }
+
+# 最後の結果表示: summary <内容>
+summary() { printf '\n\033[1;32m完了\033[0m %s\n' "$*"; }
+
 # --- 確認の結果 -------------------------------------------------------------
 # *_check は何も表示せず、sudo も使わずに、以下に結果を入れる
 
-INSTALL_COUNT=0 # インストールする件数
+REPORT=''       # [1/3] 確認 で表示する内容 (report で追加する)
+INSTALL_COUNT=0 # [2/3] でインストールする件数
+LINK_COUNT=0    # [3/3] で作ったリンクの件数
+BACKUP_COUNT=0  # [3/3] で退避したファイルの件数
 SUDO_REASON=''  # root 権限が必要な理由 (不要なら空)
+
+report() { REPORT="$REPORT$(item "$1" "$2")"$'\n'; }
 
 add_sudo_reason() {
   if [ -z "$SUDO_REASON" ]; then
