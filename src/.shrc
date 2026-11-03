@@ -4,7 +4,6 @@ alias sudo="sudo "
 alias ls='ls --color=auto'
 alias la="ls -la"
 alias grep='grep --color=auto'
-alias open="xdg-open"
 alias g="git"
 alias v="vagrant"
 alias d="docker"
@@ -37,7 +36,8 @@ history-grep() {
 alias h="history-grep"
 
 case $OSTYPE in
-  linux-gnu)
+  linux*)
+    alias open="xdg-open"
     alias upd="apt update && apt list --upgradable"
     alias upg="apt upgrade"
     alias ins="apt install"
