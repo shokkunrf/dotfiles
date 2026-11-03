@@ -57,13 +57,13 @@ deploy_defaults() {
   # カーソルの移動速度を変更 (1-15)
   defaults write NSGlobalDomain com.apple.trackpad.scaling -float 15
   # Finder: 隠しファイル表示
-  defaults write com.apple.finder AppleShowAllFile true
+  defaults write com.apple.finder AppleShowAllFiles -bool true
   # Finder: 拡張子表示
   defaults write NSGlobalDomain AppleShowAllExtensions -bool true
   # アルファベットの連続入力を有効にする
   defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 
-  killall Dock >/dev/null 2>&1 || true
+  killall Dock Finder >/dev/null 2>&1 || true
 }
 
 # --- 各ステップ -----------------------------------------------------------
