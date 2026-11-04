@@ -1,0 +1,17 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+
+# シェルスクリプト (shfmt もこの設定を使う)
+[*.sh]
+indent_style = space
+indent_size = 2
+switch_case_indent = true
+
+[src/{.bashrc,.bash_profile,.profile,.shrc,.xsession,bin/*}]
+indent_style = space
+indent_size = 2
+switch_case_indent = true

@@ -1,0 +1,29 @@
+# Debian で apt を使ってインストールするもの (GUI: install.sh --with-gui)
+#
+# 書き方は apt-cui.txt と同じ
+
+# terminal
+qterminal
+adwaita-qt|adwaita-qt6
+# font
+fonts-noto-color-emoji
+fonts-ipafont-mincho
+fcitx-mozc|fcitx5-mozc
+# xmonad
+xorg
+xmonad
+libghc-xmonad-contrib-dev  # xmonad.hs のコンパイルに必要
+xmobar
+dmenu|suckless-tools       # Debian では suckless-tools が dmenu を提供する
+feh
+# input
+xinput
+# notice
+libnotify-bin
+dunst
+# audio
+alsa-utils
+pavucontrol
+pulseaudio-utils           # bin/set-volume の pactl
+# backlight
+brightnessctl

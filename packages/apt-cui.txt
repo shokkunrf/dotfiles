@@ -1,0 +1,14 @@
+# Debian で apt を使ってインストールするもの (CUI)
+#
+# 1 行に 1 つ。# 以降はコメント
+# 'a|b' と書いたものは、どれかがインストール済みなら良しとし、
+# 無ければインストールできる最初のものを使う (Debian のバージョン差の吸収)
+vim
+fzf
+jq
+wget
+curl
+ca-certificates
+git
+sudo
+bash-completion

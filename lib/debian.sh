@@ -1,0 +1,233 @@
+# shellcheck shell=bash
+#
+# Debian の処理
+#
+#   os_preflight : 実行できる環境か (何かを表示する前に呼ぶ)
+#   os_check     : [1/3] 確認         apt / Docker / Chrome / VS Code
+#   os_install   : [2/3] インストール (事前に require_sudo が必要)
+#   os_deploy    : [3/3] 設定の配置   GUI 用のリンク
+#   os_links     : リンクする一覧 (test/verify.sh でも使う)
+#   target_shell / current_login_shell : ログインシェル (lib/common.sh で使う)
+#
+# インストールするものの一覧は packages/apt-cui.txt と packages/apt-gui.txt
+# 呼び出し側で DOT_DIRECTORY と WITH_GUI を設定し、lib/common.sh と lib/user.sh を source しておく
+
+APT_CUI_LIST="$DOT_DIRECTORY/packages/apt-cui.txt"
+APT_GUI_LIST="$DOT_DIRECTORY/packages/apt-gui.txt"
+
+# GUI 環境でリンクする dotfiles の一覧。書き方は lib/user.sh の cui_links と同じ
+os_links() {
+  if $WITH_GUI; then
+    cat <<'EOF'
+.config/qterminal.org
+.Xmodmap
+.xmonad
+.xsession
+EOF
+  fi
+}
+
+target_shell() { echo /bin/bash; }
+current_login_shell() { getent passwd "$(id -un)" | cut -d: -f7; }
+
+# --- apt ------------------------------------------------------------------
+
+# 他の apt (自動更新など) が実行中でロックを取れない場合は、終わるまで待ってやり直す
+# (apt-get update は DPkg::Lock::Timeout では待たない。判定のためメッセージは英語にする)
+apt_update() {
+  local output attempt=1
+  while ! output="$(as_root env LC_ALL=C apt-get update 2>&1)"; do
+    if ! grep -q 'Could not get lock' <<<"$output" || [ "$attempt" -ge 20 ]; then
+      printf '%s\n' "$output" >&2
+      die "apt-get update に失敗しました"
+    fi
+    log "他の apt が実行中のため、終わるのを待っています ($attempt/20)"
+    attempt=$((attempt + 1))
+    sleep 15
+  done
+}
+
+# 設定ファイルの上書き確認などでも止まらず、他の apt が実行中なら終わるまで待つ
+apt_install() {
+  as_root env DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a \
+    apt-get install -y -o DPkg::Lock::Timeout=300 \
+    -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold "$@"
+}
+
+is_dpkg_installed() {
+  [ "$(dpkg-query -W -f='${Status}' "$1" 2>/dev/null)" = 'install ok installed' ]
+}
+
+# 'a|b' のどれかがインストール済みか
+is_apt_spec_installed() {
+  local candidate
+  for candidate in ${1//|/ }; do
+    if is_dpkg_installed "$candidate"; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+# 'a|b' をインストールできる最初のパッケージ名に置き換えてインストールする (apt-get update 後に呼ぶ)
+apt_install_specs() {
+  local packages=() spec candidate found
+  for spec in "$@"; do
+    found=''
+    for candidate in ${spec//|/ }; do
+      if apt-cache show "$candidate" >/dev/null 2>&1; then
+        found="$candidate"
+        break
+      fi
+    done
+    [ -n "$found" ] || die "インストールできるパッケージがありません: $spec"
+    packages+=("$found")
+  done
+  apt_install "${packages[@]}"
+}
+
+# --- apt 以外から入れるもの -----------------------------------------------
+# supports_<名前>: この環境が対象か / needs_<名前>: インストールが必要か / install_<名前>
+
+supports_docker() { true; }
+needs_docker() {
+  is_dpkg_installed docker-ce || return 0
+  is_root && return 1
+  # 追加した直後は、ログインし直すまで今のセッションに反映されないので、グループの設定を見る
+  ! grep -qx docker <<<"$(id -nG "$(id -un)" | tr ' ' '\n')"
+}
+
+install_docker() {
+  # https://docs.docker.com/engine/install/debian/#install-using-the-repository
+  log "Docker をインストールします"
+  local distro codename arch
+  distro="$(. /etc/os-release && echo "$ID")"
+  codename="$(. /etc/os-release && echo "${VERSION_CODENAME:-}")"
+  arch="$(dpkg --print-architecture)"
+  case "$distro" in
+    debian | ubuntu) ;;
+    *) die "Docker のリポジトリが $distro に対応していません" ;;
+  esac
+  [ -n "$codename" ] || die "/etc/os-release から VERSION_CODENAME を取得できません"
+
+  if ! is_dpkg_installed docker-ce; then
+    apt_install ca-certificates curl
+    as_root install -m 0755 -d /etc/apt/keyrings
+    as_root curl -fsSL --retry 3 "https://download.docker.com/linux/$distro/gpg" -o /etc/apt/keyrings/docker.asc
+    as_root chmod a+r /etc/apt/keyrings/docker.asc
+    echo "deb [arch=$arch signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/$distro $codename stable" |
+      as_root tee /etc/apt/sources.list.d/docker.list >/dev/null
+    apt_update
+    apt_install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  fi
+
+  if ! is_root; then
+    as_root usermod -aG docker "$(id -un)"
+    log "$(id -un) を docker グループに追加しました (反映には再ログインが必要です)"
+  fi
+}
+
+supports_chrome() { [ "$(dpkg --print-architecture)" = amd64 ]; }
+needs_chrome() { ! is_dpkg_installed google-chrome-stable; }
+
+install_chrome() {
+  log "Google Chrome をインストールします"
+  local tmp
+  tmp="$(make_tmpdir)"
+  download https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb "$tmp/chrome.deb"
+  apt_install "$tmp/chrome.deb"
+  rm -rf "$tmp"
+}
+
+vscode_os() {
+  case "$(dpkg --print-architecture)" in
+    amd64) echo linux-deb-x64 ;;
+    arm64) echo linux-deb-arm64 ;;
+    armhf) echo linux-deb-armhf ;;
+    *) return 1 ;;
+  esac
+}
+
+supports_vscode() { vscode_os >/dev/null; }
+needs_vscode() { ! is_dpkg_installed code; }
+
+install_vscode() {
+  log "VS Code をインストールします"
+  local tmp
+  tmp="$(make_tmpdir)"
+  download "https://code.visualstudio.com/sha/download?build=stable&os=$(vscode_os)" "$tmp/code.deb"
+  apt_install gpg "$tmp/code.deb"
+  rm -rf "$tmp"
+}
+
+# --- 各ステップ -----------------------------------------------------------
+
+os_preflight() { :; }
+
+os_check() {
+  local specs=() packages=(docker) spec package
+  while IFS= read -r spec; do
+    specs+=("$spec")
+  done < <(
+    read_list "$APT_CUI_LIST"
+    if $WITH_GUI; then
+      read_list "$APT_GUI_LIST"
+    fi
+  )
+  if $WITH_GUI; then
+    packages+=(chrome vscode)
+  fi
+
+  MISSING_APT=()
+  for spec in "${specs[@]}"; do
+    if ! is_apt_spec_installed "$spec"; then
+      MISSING_APT+=("$spec")
+    fi
+  done
+  if [ ${#MISSING_APT[@]} -eq 0 ]; then
+    report apt "${#specs[@]} 件すべてインストール済み"
+  else
+    report apt "${#specs[@]} 件中 ${#MISSING_APT[@]} 件が未インストール (${MISSING_APT[*]})"
+  fi
+
+  MISSING_OTHERS=()
+  for package in "${packages[@]}"; do
+    if ! "supports_$package"; then
+      report "$package" "対象外 ($(dpkg --print-architecture))"
+    elif ! "needs_$package"; then
+      report "$package" "インストール済み"
+    else
+      MISSING_OTHERS+=("$package")
+      if [ "$package" = docker ] && is_dpkg_installed docker-ce; then
+        report "$package" "docker グループへの追加が必要"
+      else
+        report "$package" "未インストール"
+      fi
+    fi
+  done
+
+  local count=$((${#MISSING_APT[@]} + ${#MISSING_OTHERS[@]}))
+  INSTALL_COUNT=$((INSTALL_COUNT + count))
+  if [ "$count" -gt 0 ]; then
+    add_sudo_reason "パッケージ $count 件のインストール"
+  fi
+}
+
+os_install() {
+  local package
+  # Chrome / VS Code の .deb の依存関係の解決にも使うので、apt で何か入れる場合は先に更新する
+  if [ $((${#MISSING_APT[@]} + ${#MISSING_OTHERS[@]})) -gt 0 ]; then
+    apt_update
+  fi
+  if [ ${#MISSING_APT[@]} -gt 0 ]; then
+    log "apt パッケージをインストールします"
+    apt_install_specs "${MISSING_APT[@]}"
+  fi
+  for package in ${MISSING_OTHERS[@]+"${MISSING_OTHERS[@]}"}; do
+    "install_$package"
+  done
+}
+
+os_deploy() {
+  link_list os_links
+}

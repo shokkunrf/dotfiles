@@ -1,10 +1,9 @@
-# !/bin/sh
+# shellcheck shell=bash
 
 alias sudo="sudo "
 alias ls='ls --color=auto'
 alias la="ls -la"
 alias grep='grep --color=auto'
-alias open="xdg-open"
 alias g="git"
 alias v="vagrant"
 alias d="docker"
@@ -12,22 +11,22 @@ alias dc="docker compose"
 alias di="docker images | sed -e '1d' | sort -h -r"
 
 # git repository
-wds() { dir=$(wd list | fzf) && cd "${WD_ROOT:-$HOME/Repositories}/$dir"; }
-wda() { dir=$(wd add "$@") && cd "$dir"; }
+wds() { dir=$(wd list | fzf) && cd "${WD_ROOT:-$HOME/Repositories}/$dir" || return; }
+wda() { dir=$(wd add "$@") && cd "$dir" || return; }
 
-select-repository(){
+select-repository() {
   repos=$HOME/Repositories
-  project="$(ls $repos | fzf)"
-  cd $repos/$project
+  project="$(ls "$repos" | fzf)"
+  cd "$repos/$project" || return
 }
 alias sd="select-repository"
 
-re-login(){
+re-login() {
   exec $SHELL -l
 }
 alias lo="re-login"
 
-history-grep(){
+history-grep() {
   if [ $# = 0 ]; then
     history 10
   else
@@ -37,11 +36,12 @@ history-grep(){
 alias h="history-grep"
 
 case $OSTYPE in
-  linux-gnu)
+  linux*)
+    alias open="xdg-open"
     alias upd="apt update && apt list --upgradable"
     alias upg="apt upgrade"
     alias ins="apt install"
-  ;;
+    ;;
   *)
-  ;;
+    ;;
 esac
