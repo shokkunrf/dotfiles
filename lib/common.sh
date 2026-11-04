@@ -40,6 +40,9 @@ LINK_COUNT=0    # [3/3] で作ったリンクの件数
 BACKUP_COUNT=0  # [3/3] で退避したファイルの件数
 SUDO_REASON=''  # root 権限が必要な理由 (不要なら空)
 
+# [2/3] で失敗したものがあるか (失敗しても [3/3] は行い、最後にエラーにする)
+INSTALL_FAILED=false
+
 report() { REPORT="$REPORT$(item "$1" "$2")"$'\n'; }
 
 add_sudo_reason() {

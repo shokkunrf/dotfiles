@@ -190,7 +190,12 @@ os_install() {
   if [ -n "$MISSING_FORMULAE$MISSING_CASKS" ]; then
     log "Homebrew のパッケージをインストールします"
     # 足りないもの以外は変えないよう、インストール済みのものは更新しない
-    brew bundle --file="$BREWFILE" --no-upgrade
+    # 手動で入れたアプリとバージョンが違う場合などは失敗するが、設定の配置は続ける
+    if ! brew bundle --file="$BREWFILE" --no-upgrade; then
+      warn "Homebrew のパッケージの一部をインストールできませんでした (上のエラーを確認してください)"
+      # shellcheck disable=SC2034 # install.sh で使う
+      INSTALL_FAILED=true
+    fi
   fi
 }
 

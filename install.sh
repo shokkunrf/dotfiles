@@ -149,6 +149,9 @@ run() {
   elif [ $((INSTALL_COUNT + LINK_COUNT + SETTING_COUNT)) -gt 0 ]; then
     echo "設定を反映するにはシェルを再起動してください: exec \$SHELL -l"
   fi
+  if $INSTALL_FAILED; then
+    die "インストールできなかったものがあります。上のエラーを確認してください (設定の配置は完了しています)"
+  fi
 }
 
 # --- リポジトリを取得せずに実行した場合 ---------------------------------------
